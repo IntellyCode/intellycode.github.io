@@ -3,61 +3,97 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="IntellyCode builds data science and automation systems with supporting work in ML, computer vision, scientific computing, and code optimization.">
-    <title>IntellyCode | Data Science and Automation Systems</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9Oer+R74Qjz3tfz5YoZB1pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="assets/styles.css">
+    <title>Zenios Droussiotis &mdash; Data Science &amp; Automation</title>
+    <meta name="description" content="Freelance data science, automation engineering, and performance-minded software.">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+      :root {
+        --green: #176b5a;
+        --green-dark: #0f4f42;
+        --ink: #18201f;
+        --muted: #5f6c69;
+        --line: #d9e2df;
+        --paper: #fbfcfa;
+      }
+      body {
+        color: var(--ink);
+        background: var(--paper);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+      }
+      .brand-green { color: var(--green); }
+      .bg-green { background-color: var(--green); }
+      .text-muted-custom { color: var(--muted); }
+      .border-line { border-color: var(--line) !important; }
+      .lead { font-size: 1.15rem; }
+      .section { padding: 4rem 0; }
+      .project-card {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 1.5rem;
+        background: white;
+        transition: box-shadow .15s;
+      }
+      .project-card:hover {
+        box-shadow: 0 2px 12px rgba(0,0,0,.06);
+      }
+      .project-card .lang-dot {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 4px;
+      }
+      footer {
+        padding: 2rem 0;
+        color: var(--muted);
+        font-size: .9rem;
+        border-top: 1px solid var(--line);
+      }
+      .btn-primary {
+        background: var(--green);
+        border-color: var(--green);
+      }
+      .btn-primary:hover {
+        background: var(--green-dark);
+        border-color: var(--green-dark);
+      }
+      .btn-outline-secondary {
+        color: var(--ink);
+        border-color: var(--line);
+      }
+      .btn-outline-secondary:hover {
+        background: var(--paper);
+        border-color: var(--muted);
+      }
+    </style>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg fixed-top">
+
+    <nav class="navbar navbar-expand bg-white border-bottom border-line">
       <div class="container">
-        <a class="navbar-brand" href="#top">IntellyCode</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="mainNav">
-          <ul class="navbar-nav ms-auto">
-            <li class="nav-item"><a class="nav-link" href="#work">Work</a></li>
-            <li class="nav-item"><a class="nav-link" href="#services">Services</a></li>
-            <li class="nav-item"><a class="nav-link" href="#research">Research</a></li>
-            <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
-          </ul>
-        </div>
+        <a class="navbar-brand fw-bold" href="#">ZD</a>
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="#work">Work</a></li>
+          <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+        </ul>
       </div>
     </nav>
 
-    <main id="top">
-      <section class="hero">
+    <main>
+      <section class="section pb-0">
         <div class="container">
-          <div class="row align-items-center g-5">
-            <div class="col-lg-6">
-              <p class="eyebrow">Freelance engineering for technical teams</p>
-              <h1>IntellyCode</h1>
-              <p class="lead">Data science and automation systems for clients who need reliable analysis, research tooling, and performance-minded software around real-world workflows.</p>
-              <div class="hero-actions">
-                <a class="btn btn-primary" href="https://github.com/Intellycode">View GitHub</a>
-                <a class="btn btn-outline-dark" href="#contact">Start a project</a>
+          <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-8">
+              <h1 class="display-3 fw-bold mb-3">Zenios Droussiotis</h1>
+              <p class="fs-5 text-muted-custom mb-4">
+                I build data science and automation systems &mdash; reliable analysis, research tooling, and performance-minded software for clients who work with real-world data and hardware.
+              </p>
+              <div class="d-flex gap-3 mb-2">
+                <a href="https://github.com/IntellyCode" class="btn btn-primary">GitHub &nearr;</a>
+                <a href="#contact" class="btn btn-outline-secondary">Contact</a>
               </div>
-            </div>
-            <div class="col-lg-6">
-              <img class="hero-visual" src="assets/systems-visual.svg" alt="Automation and data systems diagram">
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="band intro-band">
-        <div class="container">
-          <div class="row g-4">
-            <div class="col-lg-8">
-              <h2>Sharper than a generic software list</h2>
-              <p>IntellyCode focuses on systems where data, automation, and technical constraints meet: robotics-adjacent Python stacks, Rust runtime work, time-series diagnostics, feature engineering, scientific computing, ML support, computer vision support, and targeted code optimization.</p>
-            </div>
-            <div class="col-lg-4">
-              <div class="signal-box">
-                <span>Core umbrella</span>
-                <strong>Data science and automation systems</strong>
-              </div>
+              <hr class="my-5">
             </div>
           </div>
         </div>
@@ -65,104 +101,112 @@
 
       <section class="section" id="work">
         <div class="container">
-          <div class="section-heading">
-            <p class="eyebrow">Selected project case studies</p>
-            <h2>Evidence of the working direction</h2>
+          <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-8">
+              <h2 class="h4 fw-bold mb-1">Projects</h2>
+              <p class="text-muted-custom mb-4">Selected work across robotics, research, and systems.</p>
+            </div>
           </div>
-          <div class="case-grid">
-            <article class="case-card">
-              <span class="case-label">Python automation</span>
-              <h3>loaden_py</h3>
-              <p>Python robotics and automation stack centered on wall-building robot workflows, coordination code, and system documentation. The project demonstrates practical automation architecture rather than a narrowly academic prototype.</p>
-              <ul>
-                <li>Python workflow orchestration</li>
-                <li>Robotics-adjacent automation logic</li>
-                <li>Public documentation prepared for review</li>
-              </ul>
-            </article>
-            <article class="case-card">
-              <span class="case-label">Rust systems work</span>
-              <h3>loaden_rs</h3>
-              <p>Performance-oriented Rust port and robot runtime direction for components where lower-level control, predictable execution, and stronger compile-time guarantees are useful.</p>
-              <ul>
-                <li>Rust runtime implementation work</li>
-                <li>Performance-minded architecture</li>
-                <li>Documentation updates completed for publication review</li>
-              </ul>
-            </article>
-            <article class="case-card">
-              <span class="case-label">Research tooling</span>
-              <h3>reidfo</h3>
-              <p>Research support tooling for time-series feature engineering, statistical diagnostics, and analysis workflows. The work is positioned for careful experimentation and interpretable diagnostics.</p>
-              <ul>
-                <li>Time-series feature workflows</li>
-                <li>Statistical diagnostic tooling</li>
-                <li>Scientific computing support</li>
-              </ul>
-            </article>
+          <div class="row justify-content-center g-3">
+            <div class="col-lg-5 col-xl-4">
+              <div class="project-card h-100">
+                <div>
+                  <span class="lang-dot" style="background:#3572A5"></span>
+                  <span class="fw-semibold">loaden_py</span>
+                  <span class="text-muted-custom small ms-2">Python</span>
+                </div>
+                <p class="small text-muted-custom mt-2 mb-0">
+                  Python robotics and automation stack for wall-building robot workflows, coordination code, and system-level automation logic.
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-5 col-xl-4">
+              <div class="project-card h-100">
+                <div>
+                  <span class="lang-dot" style="background:#dea584"></span>
+                  <span class="fw-semibold">loaden_rs</span>
+                  <span class="text-muted-custom small ms-2">Rust</span>
+                </div>
+                <p class="small text-muted-custom mt-2 mb-0">
+                  Performance-oriented Rust port of the robot runtime, focusing on lower-level control and stronger compile-time guarantees.
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-5 col-xl-4">
+              <div class="project-card h-100">
+                <div>
+                  <span class="lang-dot" style="background:#3572A5"></span>
+                  <span class="fw-semibold">reidfo</span>
+                  <span class="text-muted-custom small ms-2">Python</span>
+                </div>
+                <p class="small text-muted-custom mt-2 mb-0">
+                  Research support tooling for time-series feature engineering, statistical diagnostics, and interpretable analysis workflows.
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-5 col-xl-4">
+              <div class="project-card h-100">
+                <div>
+                  <span class="lang-dot" style="background:#3572A5"></span>
+                  <span class="fw-semibold">political_risk_regime_switching</span>
+                  <span class="text-muted-custom small ms-2">Python</span>
+                </div>
+                <p class="small text-muted-custom mt-2 mb-0">
+                  Regime-switching models applied to political risk, with Jupyter-based analysis and estimation pipelines.
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-5 col-xl-4">
+              <div class="project-card h-100">
+                <div>
+                  <span class="lang-dot" style="background:#3572A5"></span>
+                  <span class="fw-semibold">nlp_of_franchising_papers</span>
+                  <span class="text-muted-custom small ms-2">Python</span>
+                </div>
+                <p class="small text-muted-custom mt-2 mb-0">
+                  NLP analysis of academic franchising literature, combining text mining with quantitative methods.
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-5 col-xl-4">
+              <div class="project-card h-100">
+                <div>
+                  <span class="lang-dot" style="background:#b07219"></span>
+                  <span class="fw-semibold">Pascal FTC</span>
+                  <span class="text-muted-custom small ms-2">Java</span>
+                </div>
+                <p class="small text-muted-custom mt-2 mb-0">
+                  FTC robotics competition code: robot control, autonomous routines, and teleoperated driving (2023&ndash;2024).
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="row justify-content-center mt-3">
+            <div class="col-lg-10 col-xl-8">
+              <p class="small text-muted-custom">
+                More on <a href="https://github.com/IntellyCode" class="brand-green">GitHub</a>.
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
-      <section class="band" id="services">
+      <section class="section bg-white" id="contact">
         <div class="container">
-          <div class="section-heading">
-            <p class="eyebrow">Services</p>
-            <h2>Focused help for technical bottlenecks</h2>
-          </div>
-          <div class="service-grid">
-            <div class="service-item">
-              <h3>Data science systems</h3>
-              <p>Feature engineering, diagnostics, analysis pipelines, reproducible notebooks, and research-grade reporting.</p>
-            </div>
-            <div class="service-item">
-              <h3>Automation engineering</h3>
-              <p>Python automation stacks, workflow orchestration, sensor or robot-adjacent logic, and pragmatic tooling around operational processes.</p>
-            </div>
-            <div class="service-item">
-              <h3>ML and computer vision support</h3>
-              <p>Model-adjacent data preparation, experiment tooling, inference workflow support, and vision pipeline implementation.</p>
-            </div>
-            <div class="service-item">
-              <h3>Code optimization</h3>
-              <p>Profiling-led improvements, Rust or Python performance work, and targeted rewrites where maintainability and speed both matter.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="research">
-        <div class="container">
-          <div class="section-heading">
-            <p class="eyebrow">Upcoming research work</p>
-            <h2>Details to be added later</h2>
-          </div>
-          <div class="research-grid">
-            <article class="research-item">
-              <span>Future research project 01</span>
-              <h3>Research case study placeholder</h3>
-              <p>Reserved for a public-safe summary once the project scope, artifacts, and approved claims are ready.</p>
-            </article>
-            <article class="research-item">
-              <span>Future research project 02</span>
-              <h3>Research case study placeholder</h3>
-              <p>Reserved for a second research project after details are cleared for publication.</p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="contact-band" id="contact">
-        <div class="container">
-          <div class="row align-items-center g-4">
-            <div class="col-lg-8">
-              <p class="eyebrow">Contact</p>
-              <h2>Bring a technical workflow, dataset, or automation problem.</h2>
-              <p>Best fit: clients with existing technical work that needs sharper tooling, more reliable analysis, or a performance-conscious implementation path.</p>
-            </div>
-            <div class="col-lg-4 contact-actions">
-              <a class="btn btn-light" href="https://github.com/Intellycode">GitHub profile</a>
-              <a class="btn btn-outline-light" href="mailto:hello@example.com">Email placeholder</a>
+          <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-8">
+              <h2 class="h4 fw-bold mb-1">Contact</h2>
+              <p class="text-muted-custom mb-3">
+                Looking for help with data pipelines, automation, or research tooling? Let&rsquo;s talk.
+              </p>
+              <div class="d-flex flex-wrap gap-3">
+                <a href="mailto:hello@intellycode.com" class="btn btn-primary">
+                  <i class="bi bi-envelope-fill me-1"></i> Email
+                </a>
+                <a href="https://github.com/IntellyCode" class="btn btn-outline-secondary">
+                  <i class="bi bi-github me-1"></i> GitHub
+                </a>
+              </div>
             </div>
           </div>
         </div>
@@ -171,11 +215,14 @@
 
     <footer>
       <div class="container">
-        <span>IntellyCode</span>
-        <span>Static GitHub Pages site</span>
+        <div class="row justify-content-center">
+          <div class="col-lg-10 col-xl-8 d-flex justify-content-between">
+            <span>&copy; Zenios Droussiotis</span>
+            <span>IntellyCode</span>
+          </div>
+        </div>
       </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   </body>
 </html>
