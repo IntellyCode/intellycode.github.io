@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Denis Zenios &mdash; Data Science &amp; Automation</title>
-    <meta name="description" content="Freelance data science, automation engineering, and performance-minded software.">
+    <title>Denis Zenios — Data Science, Research &amp; Automation</title>
+    <meta name="description" content="B.Sc. Physics at TU Munich. Research in regime-switching and NLP. Freelance data science, automation, and research engineering.">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <style>
@@ -27,28 +27,49 @@
       .border-line { border-color: var(--line) !important; }
       .lead { font-size: 1.15rem; }
       .section { padding: 4rem 0; }
-      .project-card {
+      .card-project {
         border: 1px solid var(--line);
         border-radius: 8px;
         padding: 1.5rem;
         background: white;
         transition: box-shadow .15s;
       }
-      .project-card:hover {
+      .card-project:hover {
         box-shadow: 0 2px 12px rgba(0,0,0,.06);
       }
-      .project-card .lang-dot {
-        display: inline-block;
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        margin-right: 4px;
+      .badge-cred {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: .75rem 1rem;
+        background: white;
+        font-size: .85rem;
+        line-height: 1.3;
       }
-      footer {
-        padding: 2rem 0;
+      .badge-cred i { font-size: 1.1rem; color: var(--green); }
+      .ref-note {
+        font-size: .75rem;
         color: var(--muted);
-        font-size: .9rem;
         border-top: 1px solid var(--line);
+        padding-top: 1rem;
+        margin-top: 0;
+      }
+      .ref-note a { color: var(--green); text-decoration: none; }
+      .ref-note a:hover { text-decoration: underline; }
+      .sup-ref {
+        font-size: .7rem;
+        color: var(--green);
+        text-decoration: none;
+        vertical-align: super;
+        line-height: 0;
+      }
+      .sup-ref:hover { text-decoration: underline; }
+      .research-item {
+        padding: 1.5rem;
+        border-left: 3px solid var(--green);
+        margin-bottom: 1.5rem;
       }
       .btn-primary {
         background: var(--green);
@@ -66,117 +87,200 @@
         background: var(--paper);
         border-color: var(--muted);
       }
+      footer {
+        padding: 2rem 0;
+        color: var(--muted);
+        font-size: .9rem;
+        border-top: 1px solid var(--line);
+      }
     </style>
   </head>
   <body>
 
     <nav class="navbar navbar-expand bg-white border-bottom border-line">
       <div class="container">
-        <a class="navbar-brand fw-bold" href="#">ZD</a>
+        <a class="navbar-brand fw-bold" href="#">DZ</a>
         <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link" href="#work">Work</a></li>
+          <li class="nav-item"><a class="nav-link" href="#research">Research</a></li>
+          <li class="nav-item"><a class="nav-link" href="#work">Projects</a></li>
           <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
         </ul>
       </div>
     </nav>
 
     <main>
+      <!-- Hero -->
       <section class="section pb-0">
         <div class="container">
           <div class="row justify-content-center">
             <div class="col-lg-10 col-xl-8">
-              <h1 class="display-3 fw-bold mb-3">Denis Zenios</h1>
-              <p class="fs-5 text-muted-custom mb-4">
-                I build data science and automation systems &mdash; reliable analysis, research tooling, and performance-minded software for clients who work with real-world data and hardware.
-              </p>
-              <div class="d-flex gap-3 mb-2">
-                <a href="https://github.com/IntellyCode" class="btn btn-primary">GitHub &nearr;</a>
-                <a href="#contact" class="btn btn-outline-secondary">Contact</a>
+              <div class="d-flex align-items-center gap-2 text-muted-custom small fw-semibold mb-2" style="letter-spacing:.02em;">
+                <span>B.Sc. Physics, TU Munich</span>
+                <span class="opacity-50">&middot;</span>
+                <span>Research Assistant</span>
+                <span class="opacity-50">&middot;</span>
+                <span>Freelance Engineer</span>
               </div>
+              <h1 class="display-3 fw-bold mb-3" style="line-height:1.1;">Denis Zenios</h1>
+              <p class="fs-5 text-muted-custom mb-4" style="max-width:38em;">
+                I build data science and automation systems &mdash; reliable analysis, research tooling, and performance-minded software. My work sits at the intersection of academic research and engineering delivery.
+              </p>
+              <div class="d-flex gap-3 mb-4">
+                <a href="#work" class="btn btn-primary">See work</a>
+                <a href="#contact" class="btn btn-outline-secondary">Get in touch</a>
+                <a href="https://github.com/IntellyCode" class="btn btn-outline-secondary">GitHub &nearr;</a>
+              </div>
+
+              <!-- Credibility badges -->
+              <div class="d-flex flex-wrap gap-2 mt-4 pt-2">
+                <span class="badge-cred">
+                  <i class="bi bi-award-fill"></i>
+                  <span><strong>Best Student Paper</strong> &middot; ISoF 2025</span>
+                </span>
+                <span class="badge-cred">
+                  <i class="bi bi-trophy-fill"></i>
+                  <span><strong>FTC Robotics Champion</strong> &middot; Cyprus 2023</span>
+                </span>
+                <span class="badge-cred">
+                  <i class="bi bi-mortarboard-fill"></i>
+                  <span><strong>TUM Physics</strong> &middot; B.Sc. candidate</span>
+                </span>
+                <span class="badge-cred">
+                  <i class="bi bi-translate"></i>
+                  <span><strong>4 languages</strong> &middot; EN, EL, RU, DE (C1)</span>
+                </span>
+              </div>
+
               <hr class="my-5">
             </div>
           </div>
         </div>
       </section>
 
+      <!-- About -->
+      <section class="section pt-0">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-8">
+              <p class="lead">
+                I&rsquo;m a physics student at TU Munich with two active research assistant positions and a freelance engineering practice. My academic work spans regime-switching models for political risk and NLP topic modeling of research literature &mdash; with a Best Student Paper Award at ISoF 2025. My engineering work covers data pipelines, automation systems, robotics software, and full-stack real-time dashboards. I work in Python, Rust, JavaScript, and the scientific computing stack.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Research -->
+      <section class="section bg-white" id="research">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-8">
+              <h2 class="fw-bold mb-1">Research</h2>
+              <p class="text-muted-custom mb-4">Active projects with published or forthcoming results.</p>
+
+              <div class="research-item">
+                <div class="d-flex align-items-start gap-2 mb-1">
+                  <i class="bi bi-graph-up-arrow mt-1 brand-green"></i>
+                  <div>
+                    <h3 class="h5 fw-bold mb-1">Regime Switching in Political Risk</h3>
+                    <p class="text-muted-custom small mb-2">Research Assistant &middot; Sep 2024&ndash;Present</p>
+                    <p class="mb-2">
+                      Replicated a state-of-the-art regime-switching paper and produced new results on political risk ratings data. Developed jump models with XGBoost classifiers to identify regime switching in means and slopes, achieving out-of-sample recall rates of 0.6&ndash;0.9. Extended abstract accepted at an AI in Business conference. A publishable paper (ABS 3+) is in preparation.<a class="sup-ref" href="#ref1">&sup1;</a>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="research-item">
+                <div class="d-flex align-items-start gap-2 mb-1">
+                  <i class="bi bi-file-text mt-1 brand-green"></i>
+                  <div>
+                    <h3 class="h5 fw-bold mb-1">Mapping the Landscape of Franchising Research</h3>
+                    <p class="text-muted-custom small mb-2">Research Assistant &middot; Sep 2024&ndash;Present</p>
+                    <p class="mb-2">
+                      Applied LDA and BERT topic modeling to a corpus of 555 ISoF conference papers (2003&ndash;2024). Conducted preprocessing, semantic validation through expert review, and prepared visualizations and manuscript. Paper presented at ISoF 2025 in Cyprus, where it received the <strong>Best Student Paper Award</strong> for methodological rigor and contributions to franchising research.<a class="sup-ref" href="#ref2">&sup2;</a>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Projects -->
       <section class="section" id="work">
         <div class="container">
           <div class="row justify-content-center">
             <div class="col-lg-10 col-xl-8">
-              <h2 class="h4 fw-bold mb-1">Projects</h2>
+              <h2 class="fw-bold mb-1">Projects</h2>
               <p class="text-muted-custom mb-4">Selected work across robotics, research, and systems.</p>
             </div>
           </div>
           <div class="row justify-content-center g-3">
             <div class="col-lg-5 col-xl-4">
-              <div class="project-card h-100">
+              <div class="card-project h-100 d-flex flex-column">
                 <div>
-                  <span class="lang-dot" style="background:#3572A5"></span>
                   <span class="fw-semibold">loaden_py</span>
-                  <span class="text-muted-custom small ms-2">Python</span>
+                  <span class="text-muted-custom small ms-1">Python</span>
                 </div>
-                <p class="small text-muted-custom mt-2 mb-0">
-                  Python robotics and automation stack for wall-building robot workflows, coordination code, and system-level automation logic.
+                <p class="small text-muted-custom mt-2 mb-0 flex-grow-1">
+                  Robotics automation stack for wall-building robot workflows, coordination logic, and system-level control. Demonstrates practical automation architecture.
                 </p>
               </div>
             </div>
             <div class="col-lg-5 col-xl-4">
-              <div class="project-card h-100">
+              <div class="card-project h-100 d-flex flex-column">
                 <div>
-                  <span class="lang-dot" style="background:#dea584"></span>
                   <span class="fw-semibold">loaden_rs</span>
-                  <span class="text-muted-custom small ms-2">Rust</span>
+                  <span class="text-muted-custom small ms-1">Rust</span>
                 </div>
-                <p class="small text-muted-custom mt-2 mb-0">
-                  Performance-oriented Rust port of the robot runtime, focusing on lower-level control and stronger compile-time guarantees.
+                <p class="small text-muted-custom mt-2 mb-0 flex-grow-1">
+                  Performance-oriented Rust port of robot runtime components. Focus on lower-level control, predictable execution, and compile-time safety.
                 </p>
               </div>
             </div>
             <div class="col-lg-5 col-xl-4">
-              <div class="project-card h-100">
+              <div class="card-project h-100 d-flex flex-column">
                 <div>
-                  <span class="lang-dot" style="background:#3572A5"></span>
                   <span class="fw-semibold">reidfo</span>
-                  <span class="text-muted-custom small ms-2">Python</span>
+                  <span class="text-muted-custom small ms-1">Python &middot; scikit-learn</span>
                 </div>
-                <p class="small text-muted-custom mt-2 mb-0">
-                  Research support tooling for time-series feature engineering, statistical diagnostics, and interpretable analysis workflows.
+                <p class="small text-muted-custom mt-2 mb-0 flex-grow-1">
+                  Time-series feature engineering, statistical diagnostics, copula fitting, and regime-switching support utilities. Packaged with docs and tests.
                 </p>
               </div>
             </div>
             <div class="col-lg-5 col-xl-4">
-              <div class="project-card h-100">
+              <div class="card-project h-100 d-flex flex-column">
                 <div>
-                  <span class="lang-dot" style="background:#3572A5"></span>
-                  <span class="fw-semibold">political_risk_regime_switching</span>
-                  <span class="text-muted-custom small ms-2">Python</span>
+                  <span class="fw-semibold">robodash</span>
+                  <span class="text-muted-custom small ms-1">Flask &middot; Socket.IO &middot; React</span>
                 </div>
-                <p class="small text-muted-custom mt-2 mb-0">
-                  Regime-switching models applied to political risk, with Jupyter-based analysis and estimation pipelines.
+                <p class="small text-muted-custom mt-2 mb-0 flex-grow-1">
+                  Full-stack real-time robotics dashboard: telemetry, camera streams, logs, and operator controls. Backend in Flask/Socket.IO, frontend in React.
                 </p>
               </div>
             </div>
             <div class="col-lg-5 col-xl-4">
-              <div class="project-card h-100">
+              <div class="card-project h-100 d-flex flex-column">
                 <div>
-                  <span class="lang-dot" style="background:#3572A5"></span>
-                  <span class="fw-semibold">nlp_of_franchising_papers</span>
-                  <span class="text-muted-custom small ms-2">Python</span>
+                  <span class="fw-semibold">Political Risk Regime Switching</span>
+                  <span class="text-muted-custom small ms-1">Python &middot; XGBoost</span>
                 </div>
-                <p class="small text-muted-custom mt-2 mb-0">
-                  NLP analysis of academic franchising literature, combining text mining with quantitative methods.
+                <p class="small text-muted-custom mt-2 mb-0 flex-grow-1">
+                  Regime-switching models applied to political risk ratings with Jupyter-based analysis, estimation pipelines, and out-of-sample validation.
                 </p>
               </div>
             </div>
             <div class="col-lg-5 col-xl-4">
-              <div class="project-card h-100">
+              <div class="card-project h-100 d-flex flex-column">
                 <div>
-                  <span class="lang-dot" style="background:#b07219"></span>
-                  <span class="fw-semibold">Pascal FTC</span>
-                  <span class="text-muted-custom small ms-2">Java</span>
+                  <span class="fw-semibold">NLP of Franchising Papers</span>
+                  <span class="text-muted-custom small ms-1">Python &middot; LDA &middot; BERT</span>
                 </div>
-                <p class="small text-muted-custom mt-2 mb-0">
-                  FTC robotics competition code: robot control, autonomous routines, and teleoperated driving (2023&ndash;2024).
+                <p class="small text-muted-custom mt-2 mb-0 flex-grow-1">
+                  NLP pipeline analyzing 555 academic papers with topic modeling, text mining, and quantitative methods. Linked to published conference paper.
                 </p>
               </div>
             </div>
@@ -184,27 +288,45 @@
           <div class="row justify-content-center mt-3">
             <div class="col-lg-10 col-xl-8">
               <p class="small text-muted-custom">
-                More on <a href="https://github.com/IntellyCode" class="brand-green">GitHub</a>.
+                Full repository listing on <a href="https://github.com/IntellyCode" class="brand-green">GitHub</a>.
               </p>
             </div>
           </div>
         </div>
       </section>
 
+      <!-- References -->
+      <section class="section pt-0 pb-0">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-8">
+              <div class="ref-note">
+                <p class="mb-1" id="ref1"><a href="#ref1">&sup1;</a> Reference letter from Prof. Stavros A. Zenios, Durham University Business School, 5 June 2025, supporting Deutschlandstipendium application. Documents: extended abstract accepted at AI in Business conference; recall rates of 0.6&ndash;0.9; publishable paper (ABS 3+) expected with co-authorship.</p>
+                <p class="mb-0" id="ref2"><a href="#ref2">&sup2;</a> Confirmation letter from Dr. Nina Gorovaia, Frederick University, 31 May 2025. Documents: paper presented at ISoF 2025 (21&ndash;24 May, Cyprus); Best Student Paper Award received.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contact -->
       <section class="section bg-white" id="contact">
         <div class="container">
           <div class="row justify-content-center">
             <div class="col-lg-10 col-xl-8">
-              <h2 class="h4 fw-bold mb-1">Contact</h2>
+              <h2 class="fw-bold mb-1">Contact</h2>
               <p class="text-muted-custom mb-3">
-                Looking for help with data pipelines, automation, or research tooling? Let&rsquo;s talk.
+                Looking for research collaboration, data pipelines, or automation work? Let&rsquo;s talk.
               </p>
-              <div class="d-flex flex-wrap gap-3">
+              <div class="d-flex flex-wrap gap-3 align-items-center">
                 <a href="mailto:denis.zenios@gmail.com" class="btn btn-primary">
-                  <i class="bi bi-envelope-fill me-1"></i> Email
+                  <i class="bi bi-envelope-fill me-1"></i> denis.zenios@gmail.com
                 </a>
                 <a href="https://github.com/IntellyCode" class="btn btn-outline-secondary">
                   <i class="bi bi-github me-1"></i> GitHub
+                </a>
+                <a href="cv.pdf" class="btn btn-outline-secondary">
+                  <i class="bi bi-download me-1"></i> CV (PDF)
                 </a>
               </div>
             </div>
@@ -218,7 +340,7 @@
         <div class="row justify-content-center">
           <div class="col-lg-10 col-xl-8 d-flex justify-content-between">
             <span>&copy; Denis Zenios</span>
-            <span>IntellyCode</span>
+            <span class="text-muted-custom">IntellyCode</span>
           </div>
         </div>
       </div>
