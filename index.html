@@ -120,22 +120,23 @@
       .hero { padding: 5rem 0 2rem; }
 
       .eyebrow {
-        display: flex;
-        align-items: center;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
         gap: .5rem;
-        font-size: .8rem;
-        font-weight: 600;
-        letter-spacing: .08em;
-        text-transform: uppercase;
-        color: var(--muted);
-        margin-bottom: 1.25rem;
+        margin-bottom: 1.5rem;
       }
 
-      .eyebrow-dot {
-        width: 4px;
-        height: 4px;
-        border-radius: 50%;
-        background: var(--line);
+      .eyebrow-item {
+        text-align: center;
+        font-size: .75rem;
+        font-weight: 600;
+        letter-spacing: .07em;
+        text-transform: uppercase;
+        color: var(--muted);
+        padding: .6rem .5rem;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: var(--white);
       }
 
       .hero-tagline {
@@ -421,11 +422,9 @@
       <section class="hero flush-bottom">
         <div class="container">
           <div class="eyebrow">
-            <span>Freelance Software Engineer</span>
-            <span class="eyebrow-dot"></span>
-            <span>Research Assistant</span>
-            <span class="eyebrow-dot"></span>
-            <span>Physics Student, TU Munich</span>
+            <div class="eyebrow-item">Freelance Software Engineer</div>
+            <div class="eyebrow-item">Research Assistant</div>
+            <div class="eyebrow-item">Physics Student, TU Munich</div>
           </div>
 
           <h1 class="display-name">Denis Zenios</h1>
