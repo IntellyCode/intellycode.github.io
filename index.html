@@ -3,345 +3,632 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Denis Zenios — Data Science, Research &amp; Automation</title>
-    <meta name="description" content="B.Sc. Physics at TU Munich. Research in regime-switching and NLP. Freelance data science, automation, and research engineering.">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Denis Zenios — Freelance Software Engineer</title>
+    <meta name="description" content="Freelance software engineer specialising in data pipelines, automation systems, and research engineering. Physics student at TU Munich.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <style>
       :root {
-        --green: #176b5a;
+        --green:      #176b5a;
         --green-dark: #0f4f42;
-        --ink: #18201f;
-        --muted: #5f6c69;
-        --line: #d9e2df;
-        --paper: #fbfcfa;
+        --green-pale: #edf5f3;
+        --ink:        #161d1b;
+        --muted:      #5a6863;
+        --line:       #dce8e4;
+        --paper:      #f9fbfa;
+        --white:      #ffffff;
       }
+
+      *, *::before, *::after { box-sizing: border-box; }
+
+      html { scroll-behavior: smooth; }
+
       body {
+        margin: 0;
         color: var(--ink);
         background: var(--paper);
-        font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+        font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+        font-size: 1rem;
+        line-height: 1.65;
+        -webkit-font-smoothing: antialiased;
       }
-      .brand-green { color: var(--green); }
-      .bg-green { background-color: var(--green); }
-      .text-muted-custom { color: var(--muted); }
-      .border-line { border-color: var(--line) !important; }
-      .lead { font-size: 1.15rem; }
-      .section { padding: 4rem 0; }
-      .card-project {
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        padding: 1.5rem;
-        background: white;
-        transition: box-shadow .15s;
+
+      /* ── Typography ── */
+      h1, h2, h3 { font-family: 'DM Serif Display', Georgia, serif; font-weight: 400; }
+
+      .display-name {
+        font-family: 'DM Serif Display', Georgia, serif;
+        font-size: clamp(2.8rem, 6vw, 4.5rem);
+        line-height: 1.05;
+        letter-spacing: -.02em;
+        color: var(--ink);
       }
-      .card-project:hover {
-        box-shadow: 0 2px 12px rgba(0,0,0,.06);
+
+      .section-title {
+        font-size: 1.75rem;
+        margin-bottom: .25rem;
       }
-      .badge-cred {
+
+      /* ── Layout ── */
+      .container {
+        width: 100%;
+        max-width: 860px;
+        margin-inline: auto;
+        padding-inline: 1.5rem;
+      }
+
+      section { padding: 4rem 0; }
+      section.flush-top { padding-top: 0; }
+      section.flush-bottom { padding-bottom: 0; }
+
+      /* ── Nav ── */
+      nav {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: rgba(249,251,250,.92);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid var(--line);
+        padding: .75rem 0;
+      }
+
+      .nav-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .nav-brand {
+        display: flex;
+        align-items: center;
+        gap: .6rem;
+        text-decoration: none;
+        color: var(--ink);
+        font-weight: 600;
+        font-size: .95rem;
+      }
+
+      .nav-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 1.5px solid var(--line);
+        object-fit: cover;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 1.75rem;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .nav-links a {
+        text-decoration: none;
+        color: var(--muted);
+        font-size: .9rem;
+        font-weight: 500;
+        transition: color .15s;
+      }
+
+      .nav-links a:hover { color: var(--green); }
+
+      /* ── Hero ── */
+      .hero { padding: 5rem 0 2rem; }
+
+      .eyebrow {
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        font-size: .8rem;
+        font-weight: 600;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 1.25rem;
+      }
+
+      .eyebrow-dot {
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: var(--line);
+      }
+
+      .hero-tagline {
+        font-size: clamp(1.05rem, 2vw, 1.2rem);
+        color: var(--muted);
+        max-width: 36em;
+        margin: 1.25rem 0 2rem;
+        line-height: 1.7;
+      }
+
+      /* ── Buttons ── */
+      .btn-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .75rem;
+        margin-bottom: 2.5rem;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        padding: .55rem 1.2rem;
+        border-radius: 6px;
+        font-size: .9rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: background .15s, border-color .15s, color .15s;
+        border: 1.5px solid transparent;
+        cursor: pointer;
+      }
+
+      .btn-primary {
+        background: var(--green);
+        color: var(--white);
+        border-color: var(--green);
+      }
+
+      .btn-primary:hover {
+        background: var(--green-dark);
+        border-color: var(--green-dark);
+      }
+
+      .btn-ghost {
+        background: transparent;
+        color: var(--ink);
+        border-color: var(--line);
+      }
+
+      .btn-ghost:hover {
+        border-color: var(--muted);
+        color: var(--green);
+      }
+
+      /* ── Credential badges ── */
+      .cred-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .6rem;
+        margin-top: 1.5rem;
+      }
+
+      .cred-badge {
         display: inline-flex;
         align-items: center;
         gap: .5rem;
+        padding: .55rem .9rem;
         border: 1px solid var(--line);
-        border-radius: 8px;
-        padding: .75rem 1rem;
-        background: white;
-        font-size: .85rem;
+        border-radius: 6px;
+        background: var(--white);
+        font-size: .82rem;
+        font-weight: 500;
+        color: var(--ink);
         line-height: 1.3;
       }
-      .badge-cred i { font-size: 1.1rem; color: var(--green); }
-      .ref-note {
+
+      .cred-badge i {
+        color: var(--green);
+        font-size: 1rem;
+        flex-shrink: 0;
+      }
+
+      .cred-badge .cred-sub {
+        color: var(--muted);
+        font-weight: 400;
+      }
+
+      /* ── Divider ── */
+      hr {
+        border: none;
+        border-top: 1px solid var(--line);
+        margin: 3rem 0 0;
+      }
+
+      /* ── About ── */
+      .about-lead {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: var(--ink);
+        max-width: 58ch;
+      }
+
+      /* ── Research ── */
+      .section-bg { background: var(--white); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+
+      .section-subtitle { color: var(--muted); font-size: .95rem; margin-bottom: 2rem; }
+
+      .research-item {
+        display: flex;
+        gap: 1.25rem;
+        padding: 1.5rem 0;
+        border-top: 1px solid var(--line);
+      }
+
+      .research-item:last-child { border-bottom: 1px solid var(--line); }
+
+      .research-icon {
+        flex-shrink: 0;
+        width: 2rem;
+        height: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--green-pale);
+        border-radius: 6px;
+        color: var(--green);
+        font-size: 1rem;
+        margin-top: .15rem;
+      }
+
+      .research-meta {
+        font-size: .8rem;
+        color: var(--muted);
+        margin-bottom: .4rem;
+      }
+
+      .research-body { font-size: .95rem; color: var(--muted); margin: 0; }
+
+      .research-title { font-size: 1.05rem; margin: 0 0 .2rem; font-family: 'DM Sans', sans-serif; font-weight: 600; }
+
+      /* ── Projects grid ── */
+      .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: .85rem;
+        margin-top: 1.5rem;
+      }
+
+      @media (max-width: 600px) {
+        .projects-grid { grid-template-columns: 1fr; }
+      }
+
+      .project-card {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 1.25rem;
+        background: var(--white);
+        display: flex;
+        flex-direction: column;
+        transition: box-shadow .15s, border-color .15s;
+      }
+
+      .project-card:hover {
+        box-shadow: 0 2px 16px rgba(0,0,0,.05);
+        border-color: #bdd1cc;
+      }
+
+      .project-card-top {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: .5rem;
+        margin-bottom: .6rem;
+      }
+
+      .project-name {
+        font-weight: 600;
+        font-size: .95rem;
+        color: var(--ink);
+      }
+
+      .project-tag {
+        font-size: .72rem;
+        color: var(--muted);
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+
+      .project-desc {
+        font-size: .85rem;
+        color: var(--muted);
+        margin: 0;
+        flex-grow: 1;
+        line-height: 1.6;
+      }
+
+      .project-link {
+        display: inline-flex;
+        align-items: center;
+        gap: .25rem;
+        font-size: .78rem;
+        color: var(--green);
+        text-decoration: none;
+        margin-top: .75rem;
+        font-weight: 500;
+      }
+
+      .project-link:hover { text-decoration: underline; }
+
+      .project-private {
+        display: inline-flex;
+        align-items: center;
+        gap: .25rem;
         font-size: .75rem;
         color: var(--muted);
-        border-top: 1px solid var(--line);
-        padding-top: 1rem;
-        margin-top: 0;
+        margin-top: .75rem;
       }
-      .ref-note a { color: var(--green); text-decoration: none; }
-      .ref-note a:hover { text-decoration: underline; }
-      .sup-ref {
-        font-size: .7rem;
+
+      /* ── References ── */
+      .ref-block {
+        font-size: .75rem;
+        color: var(--muted);
+        padding: 1.5rem 0 0;
+        border-top: 1px solid var(--line);
+        line-height: 1.7;
+      }
+
+      .ref-block a { color: var(--green); text-decoration: none; }
+      .ref-block a:hover { text-decoration: underline; }
+
+      sup a {
+        font-size: .68rem;
         color: var(--green);
         text-decoration: none;
         vertical-align: super;
         line-height: 0;
       }
-      .sup-ref:hover { text-decoration: underline; }
-      .research-item {
-        padding: 1.5rem;
-        border-left: 3px solid var(--green);
-        margin-bottom: 1.5rem;
-      }
-      .btn-primary {
-        background: var(--green);
-        border-color: var(--green);
-      }
-      .btn-primary:hover {
-        background: var(--green-dark);
-        border-color: var(--green-dark);
-      }
-      .btn-outline-secondary {
-        color: var(--ink);
-        border-color: var(--line);
-      }
-      .btn-outline-secondary:hover {
-        background: var(--paper);
-        border-color: var(--muted);
-      }
+
+      /* ── Contact ── */
+      .contact-intro { color: var(--muted); margin-bottom: 1.5rem; max-width: 44ch; }
+
+      /* ── Footer ── */
       footer {
-        padding: 2rem 0;
+        padding: 1.75rem 0;
         color: var(--muted);
-        font-size: .9rem;
+        font-size: .85rem;
         border-top: 1px solid var(--line);
+      }
+
+      .footer-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
       }
     </style>
   </head>
   <body>
 
-    <nav class="navbar navbar-expand bg-white border-bottom border-line">
-      <div class="container">
-        <a class="navbar-brand fw-bold" href="#">DZ</a>
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link" href="#research">Research</a></li>
-          <li class="nav-item"><a class="nav-link" href="#work">Projects</a></li>
-          <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+    <!-- Nav -->
+    <nav>
+      <div class="container nav-inner">
+        <a href="#" class="nav-brand">
+          <img
+            class="nav-avatar"
+            src="https://avatars.githubusercontent.com/u/IntellyCode"
+            onerror="this.style.display='none';document.getElementById('nav-initials').style.display='flex';"
+            alt="Denis Zenios"
+          >
+          <span id="nav-initials" style="display:none;width:32px;height:32px;border-radius:50%;background:var(--green);color:#fff;font-size:.8rem;font-weight:700;align-items:center;justify-content:center;">DZ</span>
+          Denis Zenios
+        </a>
+        <ul class="nav-links">
+          <li><a href="#research">Research</a></li>
+          <li><a href="#work">Projects</a></li>
+          <li><a href="#contact">Contact</a></li>
         </ul>
       </div>
     </nav>
 
     <main>
+
       <!-- Hero -->
-      <section class="section pb-0">
+      <section class="hero flush-bottom">
         <div class="container">
-          <div class="row justify-content-center">
-            <div class="col-lg-10 col-xl-8">
-              <div class="d-flex align-items-center gap-2 text-muted-custom small fw-semibold mb-2" style="letter-spacing:.02em;">
-                <span>B.Sc. Physics, TU Munich</span>
-                <span class="opacity-50">&middot;</span>
-                <span>Research Assistant</span>
-                <span class="opacity-50">&middot;</span>
-                <span>Freelance Engineer</span>
-              </div>
-              <h1 class="display-3 fw-bold mb-3" style="line-height:1.1;">Denis Zenios</h1>
-              <p class="fs-5 text-muted-custom mb-4" style="max-width:38em;">
-                I build data science and automation systems &mdash; reliable analysis, research tooling, and performance-minded software. My work sits at the intersection of academic research and engineering delivery.
-              </p>
-              <div class="d-flex gap-3 mb-4">
-                <a href="#work" class="btn btn-primary">See work</a>
-                <a href="#contact" class="btn btn-outline-secondary">Get in touch</a>
-                <a href="https://github.com/IntellyCode" class="btn btn-outline-secondary">GitHub &nearr;</a>
-              </div>
-
-              <!-- Credibility badges -->
-              <div class="d-flex flex-wrap gap-2 mt-4 pt-2">
-                <span class="badge-cred">
-                  <i class="bi bi-award-fill"></i>
-                  <span><strong>Best Student Paper</strong> &middot; ISoF 2025</span>
-                </span>
-                <span class="badge-cred">
-                  <i class="bi bi-trophy-fill"></i>
-                  <span><strong>FTC Robotics Champion</strong> &middot; Cyprus 2023</span>
-                </span>
-                <span class="badge-cred">
-                  <i class="bi bi-mortarboard-fill"></i>
-                  <span><strong>TUM Physics</strong> &middot; B.Sc. candidate</span>
-                </span>
-                <span class="badge-cred">
-                  <i class="bi bi-translate"></i>
-                  <span><strong>4 languages</strong> &middot; EN, EL, RU, DE (C1)</span>
-                </span>
-              </div>
-
-              <hr class="my-5">
-            </div>
+          <div class="eyebrow">
+            <span>Freelance Software Engineer</span>
+            <span class="eyebrow-dot"></span>
+            <span>Research Assistant</span>
+            <span class="eyebrow-dot"></span>
+            <span>Physics Student, TU Munich</span>
           </div>
+
+          <h1 class="display-name">Denis Zenios</h1>
+
+          <p class="hero-tagline">
+            I build data pipelines, automation systems, and research software. I work on problems where getting the answer right matters.
+          </p>
+
+          <div class="btn-row">
+            <a href="#work" class="btn btn-primary">See work</a>
+            <a href="#contact" class="btn btn-ghost">Get in touch</a>
+            <a href="https://github.com/IntellyCode" class="btn btn-ghost" target="_blank" rel="noopener">
+              <i class="bi bi-github"></i> GitHub
+            </a>
+          </div>
+
+          <div class="cred-row">
+            <span class="cred-badge">
+              <i class="bi bi-award-fill"></i>
+              <span><strong>Best Student Paper</strong> <span class="cred-sub">&middot; ISoF 2025</span></span>
+            </span>
+            <span class="cred-badge">
+              <i class="bi bi-trophy-fill"></i>
+              <span><strong>FTC Robotics Champion</strong> <span class="cred-sub">&middot; Cyprus 2023</span></span>
+            </span>
+            <span class="cred-badge">
+              <i class="bi bi-mortarboard-fill"></i>
+              <span><strong>TUM Physics</strong> <span class="cred-sub">&middot; B.Sc. candidate</span></span>
+            </span>
+            <span class="cred-badge">
+              <i class="bi bi-code-slash"></i>
+              <span><strong>Python · Rust · Java · JavaScript</strong></span>
+            </span>
+          </div>
+
+          <hr>
         </div>
       </section>
 
       <!-- About -->
-      <section class="section pt-0">
+      <section class="flush-top">
         <div class="container">
-          <div class="row justify-content-center">
-            <div class="col-lg-10 col-xl-8">
-              <p class="lead">
-                I&rsquo;m a physics student at TU Munich with two active research assistant positions and a freelance engineering practice. My academic work spans regime-switching models for political risk and NLP topic modeling of research literature &mdash; with a Best Student Paper Award at ISoF 2025. My engineering work covers data pipelines, automation systems, robotics software, and full-stack real-time dashboards. I work in Python, Rust, JavaScript, and the scientific computing stack.
-              </p>
-            </div>
-          </div>
+          <p class="about-lead">
+            I'm a freelance software engineer studying physics at TU Munich. I work on data pipelines, automation systems, robotics software, and full-stack real-time systems. I also worked as a research assistant on two projects: an NLP study of franchising literature that received the Best Student Paper Award at ISoF 2025, and ongoing work on regime-switching models for political risk data.
+          </p>
         </div>
       </section>
 
       <!-- Research -->
-      <section class="section bg-white" id="research">
+      <section class="section-bg" id="research">
         <div class="container">
-          <div class="row justify-content-center">
-            <div class="col-lg-10 col-xl-8">
-              <h2 class="fw-bold mb-1">Research</h2>
-              <p class="text-muted-custom mb-4">Active projects with published or forthcoming results.</p>
+          <h2 class="section-title">Research</h2>
+          <p class="section-subtitle">Completed and ongoing projects with published or forthcoming results.</p>
 
-              <div class="research-item">
-                <div class="d-flex align-items-start gap-2 mb-1">
-                  <i class="bi bi-graph-up-arrow mt-1 brand-green"></i>
-                  <div>
-                    <h3 class="h5 fw-bold mb-1">Regime Switching in Political Risk</h3>
-                    <p class="text-muted-custom small mb-2">Research Assistant &middot; Sep 2024&ndash;Present</p>
-                    <p class="mb-2">
-                      Replicated a state-of-the-art regime-switching paper and produced new results on political risk ratings data. Developed jump models with XGBoost classifiers to identify regime switching in means and slopes, achieving out-of-sample recall rates of 0.6&ndash;0.9. Extended abstract accepted at an AI in Business conference. A publishable paper (ABS 3+) is in preparation.<a class="sup-ref" href="#ref1">&sup1;</a>
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div class="research-item">
-                <div class="d-flex align-items-start gap-2 mb-1">
-                  <i class="bi bi-file-text mt-1 brand-green"></i>
-                  <div>
-                    <h3 class="h5 fw-bold mb-1">Mapping the Landscape of Franchising Research</h3>
-                    <p class="text-muted-custom small mb-2">Research Assistant &middot; Sep 2024&ndash;Present</p>
-                    <p class="mb-2">
-                      Applied LDA and BERT topic modeling to a corpus of 555 ISoF conference papers (2003&ndash;2024). Conducted preprocessing, semantic validation through expert review, and prepared visualizations and manuscript. Paper presented at ISoF 2025 in Cyprus, where it received the <strong>Best Student Paper Award</strong> for methodological rigor and contributions to franchising research.<a class="sup-ref" href="#ref2">&sup2;</a>
-                    </p>
-                  </div>
-                </div>
-              </div>
+          <div class="research-item">
+            <div class="research-icon"><i class="bi bi-file-text"></i></div>
+            <div>
+              <p class="research-title">Mapping the Landscape of Franchising Research</p>
+              <p class="research-meta">Research Assistant &middot; Sep 2024 – May 2025</p>
+              <p class="research-body">
+                Applied LDA and BERT topic modelling to a corpus of ~555 ISoF conference papers (2003–2024). Led preprocessing, semantic validation through expert review, and manuscript preparation. Paper presented at ISoF 2025 in Cyprus, where it received the <strong>Best Student Paper Award</strong> for methodological rigour and contribution to franchising research.<sup><a href="#ref2" id="src2">2</a></sup>
+              </p>
             </div>
+          </div>
+
+          <div class="research-item">
+            <div class="research-icon"><i class="bi bi-graph-up-arrow"></i></div>
+            <div>
+              <p class="research-title">Regime Switching in Political Risk</p>
+              <p class="research-meta">Research Assistant &middot; Sep 2024 – Present</p>
+              <p class="research-body">
+                Replicated a state-of-the-art regime-switching paper and produced new results on political risk ratings data. Developed statistical jump models and graph auto-encoder approaches, with XGBoost classifiers achieving out-of-sample recall of 0.6–0.9 across regimes. Used Hyperopt for model optimisation. Statistical analysis confirms distinct regimes in political risk time series. Extended abstract accepted at an AI in Business conference.<sup><a href="#ref1" id="src1">1</a></sup>
+              </p>
+            </div>
+          </div>
+
+          <!-- References -->
+          <div class="ref-block">
+            <p id="ref1" style="margin:.25rem 0;"><a href="#src1">1</a> Reference letter from Prof. Stavros A. Zenios, Durham University Business School, 5 June 2025.</p>
+            <p id="ref2" style="margin:.25rem 0;"><a href="#src2">2</a> Confirmation letter from Dr. Nina Gorovaia, Frederick University, 31 May 2025.</p>
           </div>
         </div>
       </section>
 
       <!-- Projects -->
-      <section class="section" id="work">
+      <section id="work">
         <div class="container">
-          <div class="row justify-content-center">
-            <div class="col-lg-10 col-xl-8">
-              <h2 class="fw-bold mb-1">Projects</h2>
-              <p class="text-muted-custom mb-4">Selected work across robotics, research, and systems.</p>
-            </div>
-          </div>
-          <div class="row justify-content-center g-3">
-            <div class="col-lg-5 col-xl-4">
-              <div class="card-project h-100 d-flex flex-column">
-                <div>
-                  <span class="fw-semibold">loaden_py</span>
-                  <span class="text-muted-custom small ms-1">Python</span>
-                </div>
-                <p class="small text-muted-custom mt-2 mb-0 flex-grow-1">
-                  Robotics automation stack for wall-building robot workflows, coordination logic, and system-level control. Demonstrates practical automation architecture.
-                </p>
-              </div>
-            </div>
-            <div class="col-lg-5 col-xl-4">
-              <div class="card-project h-100 d-flex flex-column">
-                <div>
-                  <span class="fw-semibold">loaden_rs</span>
-                  <span class="text-muted-custom small ms-1">Rust</span>
-                </div>
-                <p class="small text-muted-custom mt-2 mb-0 flex-grow-1">
-                  Performance-oriented Rust port of robot runtime components. Focus on lower-level control, predictable execution, and compile-time safety.
-                </p>
-              </div>
-            </div>
-            <div class="col-lg-5 col-xl-4">
-              <div class="card-project h-100 d-flex flex-column">
-                <div>
-                  <span class="fw-semibold">reidfo</span>
-                  <span class="text-muted-custom small ms-1">Python &middot; scikit-learn</span>
-                </div>
-                <p class="small text-muted-custom mt-2 mb-0 flex-grow-1">
-                  Time-series feature engineering, statistical diagnostics, copula fitting, and regime-switching support utilities. Packaged with docs and tests.
-                </p>
-              </div>
-            </div>
-            <div class="col-lg-5 col-xl-4">
-              <div class="card-project h-100 d-flex flex-column">
-                <div>
-                  <span class="fw-semibold">robodash</span>
-                  <span class="text-muted-custom small ms-1">Flask &middot; Socket.IO &middot; React</span>
-                </div>
-                <p class="small text-muted-custom mt-2 mb-0 flex-grow-1">
-                  Full-stack real-time robotics dashboard: telemetry, camera streams, logs, and operator controls. Backend in Flask/Socket.IO, frontend in React.
-                </p>
-              </div>
-            </div>
-            <div class="col-lg-5 col-xl-4">
-              <div class="card-project h-100 d-flex flex-column">
-                <div>
-                  <span class="fw-semibold">Political Risk Regime Switching</span>
-                  <span class="text-muted-custom small ms-1">Python &middot; XGBoost</span>
-                </div>
-                <p class="small text-muted-custom mt-2 mb-0 flex-grow-1">
-                  Regime-switching models applied to political risk ratings with Jupyter-based analysis, estimation pipelines, and out-of-sample validation.
-                </p>
-              </div>
-            </div>
-            <div class="col-lg-5 col-xl-4">
-              <div class="card-project h-100 d-flex flex-column">
-                <div>
-                  <span class="fw-semibold">NLP of Franchising Papers</span>
-                  <span class="text-muted-custom small ms-1">Python &middot; LDA &middot; BERT</span>
-                </div>
-                <p class="small text-muted-custom mt-2 mb-0 flex-grow-1">
-                  NLP pipeline analyzing 555 academic papers with topic modeling, text mining, and quantitative methods. Linked to published conference paper.
-                </p>
-              </div>
-            </div>
-          </div>
-          <div class="row justify-content-center mt-3">
-            <div class="col-lg-10 col-xl-8">
-              <p class="small text-muted-custom">
-                Full repository listing on <a href="https://github.com/IntellyCode" class="brand-green">GitHub</a>.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+          <h2 class="section-title">Projects</h2>
+          <p class="section-subtitle">Selected engineering work across automation, robotics, and research systems.</p>
 
-      <!-- References -->
-      <section class="section pt-0 pb-0">
-        <div class="container">
-          <div class="row justify-content-center">
-            <div class="col-lg-10 col-xl-8">
-              <div class="ref-note">
-                <p class="mb-1" id="ref1"><a href="#ref1">&sup1;</a> Reference letter from Prof. Stavros A. Zenios, Durham University Business School, 5 June 2025, supporting Deutschlandstipendium application. Documents: extended abstract accepted at AI in Business conference; recall rates of 0.6&ndash;0.9; publishable paper (ABS 3+) expected with co-authorship.</p>
-                <p class="mb-0" id="ref2"><a href="#ref2">&sup2;</a> Confirmation letter from Dr. Nina Gorovaia, Frederick University, 31 May 2025. Documents: paper presented at ISoF 2025 (21&ndash;24 May, Cyprus); Best Student Paper Award received.</p>
+          <div class="projects-grid">
+
+            <div class="project-card">
+              <div class="project-card-top">
+                <span class="project-name">Loaden</span>
+                <span class="project-tag">Python · ROS</span>
+              </div>
+              <p class="project-desc">Automation stack for an autonomous construction assistant robot designed to carry loads upstairs, freeing tradespeople from logistics. Covers coordination logic, motion planning, and system-level control. Developed as part of an active startup.</p>
+              <a href="https://github.com/IntellyCode/loaden_py" class="project-link" target="_blank" rel="noopener">GitHub <i class="bi bi-arrow-up-right"></i></a>
+            </div>
+
+            <div class="project-card">
+              <div class="project-card-top">
+                <span class="project-name">Loaden RS</span>
+                <span class="project-tag">Rust</span>
+              </div>
+              <p class="project-desc">Performance-optimised Rust port of the Loaden runtime. Targets edge devices with hardware accelerators, delivering predictable low-latency execution and compile-time safety for embedded deployment.</p>
+              <a href="https://github.com/IntellyCode/loaden_rs" class="project-link" target="_blank" rel="noopener">GitHub <i class="bi bi-arrow-up-right"></i></a>
+            </div>
+
+            <div class="project-card">
+              <div class="project-card-top">
+                <span class="project-name">RoboDash</span>
+                <span class="project-tag">Flask · Socket.IO · React</span>
+              </div>
+              <p class="project-desc">Full-stack real-time robotics dashboard. Streams telemetry, camera feeds, and system logs to operators. Flask and Socket.IO backend, React frontend.</p>
+              <div style="display:flex;gap:1rem;">
+                <a href="https://github.com/IntellyCode/robodash-server" class="project-link" target="_blank" rel="noopener">Server <i class="bi bi-arrow-up-right"></i></a>
+                <a href="https://github.com/IntellyCode/robodash-frontend" class="project-link" target="_blank" rel="noopener">Frontend <i class="bi bi-arrow-up-right"></i></a>
               </div>
             </div>
+
+            <div class="project-card">
+              <div class="project-card-top">
+                <span class="project-name">reidfo</span>
+                <span class="project-tag">Python · scikit-learn</span>
+              </div>
+              <p class="project-desc">Library for time-series regime identification. Includes feature engineering, statistical diagnostics, copula fitting, and jump model utilities. Developed alongside the political risk research, packaged with tests and documentation.</p>
+              <a href="https://github.com/IntellyCode/reidfo" class="project-link" target="_blank" rel="noopener">GitHub <i class="bi bi-arrow-up-right"></i></a>
+            </div>
+
+            <div class="project-card">
+              <div class="project-card-top">
+                <span class="project-name">Political Risk Regime Switching</span>
+                <span class="project-tag">Python · XGBoost · PyG</span>
+              </div>
+              <p class="project-desc">Research pipeline for regime detection in political risk time series. Implements statistical jump models, graph auto-encoders on graphical data, and Hyperopt-tuned classifiers. Confirms statistically distinct regimes in sovereign risk ratings.</p>
+              <a href="https://github.com/IntellyCode/reidfo" class="project-link" target="_blank" rel="noopener">reidfo package <i class="bi bi-arrow-up-right"></i></a>
+            </div>
+
+            <div class="project-card">
+              <div class="project-card-top">
+                <span class="project-name">NLP Franchising Pipeline</span>
+                <span class="project-tag">Python · LDA · BERT</span>
+              </div>
+              <p class="project-desc">End-to-end NLP pipeline analysing ~600 academic conference papers with LDA and BERT topic modelling. Includes text preprocessing, semantic cross-validation, and visualisations. The resulting paper received Best Student Paper at ISoF 2025.</p>
+              <a href="https://github.com/IntellyCode/nlp_of_franchising_papers" class="project-link" target="_blank" rel="noopener">GitHub (LDA phase) <i class="bi bi-arrow-up-right"></i></a>
+            </div>
+
+            <div class="project-card">
+              <div class="project-card-top">
+                <span class="project-name">Autonomous Outreach Pipeline</span>
+                <span class="project-tag">Python · Cloud</span>
+              </div>
+              <p class="project-desc">Cloud-based system for fully autonomous targeted outreach. Accepts a high-level category instruction and operates end-to-end without human intervention. Proprietary.</p>
+              <span class="project-private"><i class="bi bi-lock"></i> Proprietary</span>
+            </div>
+
           </div>
         </div>
       </section>
 
       <!-- Contact -->
-      <section class="section bg-white" id="contact">
+      <section class="section-bg" id="contact">
         <div class="container">
-          <div class="row justify-content-center">
-            <div class="col-lg-10 col-xl-8">
-              <h2 class="fw-bold mb-1">Contact</h2>
-              <p class="text-muted-custom mb-3">
-                Looking for research collaboration, data pipelines, or automation work? Let&rsquo;s talk.
-              </p>
-              <div class="d-flex flex-wrap gap-3 align-items-center">
-                <a href="mailto:denis.zenios@gmail.com" class="btn btn-primary">
-                  <i class="bi bi-envelope-fill me-1"></i> denis.zenios@gmail.com
-                </a>
-                <a href="https://github.com/IntellyCode" class="btn btn-outline-secondary">
-                  <i class="bi bi-github me-1"></i> GitHub
-                </a>
-              </div>
-            </div>
+          <h2 class="section-title">Contact</h2>
+          <p class="contact-intro">
+            Looking for help with data pipelines, automation systems, or research engineering? Let's talk.
+          </p>
+          <div class="btn-row">
+            <a href="mailto:denis.zenios@tum.de" class="btn btn-primary">
+              <i class="bi bi-envelope-fill"></i> Email me
+            </a>
+            <a href="https://github.com/IntellyCode" class="btn btn-ghost" target="_blank" rel="noopener">
+              <i class="bi bi-github"></i> GitHub
+            </a>
           </div>
         </div>
       </section>
+
     </main>
 
     <footer>
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-lg-10 col-xl-8 d-flex justify-content-between">
-            <span>&copy; Denis Zenios</span>
-            <span class="text-muted-custom">IntellyCode</span>
-          </div>
-        </div>
+      <div class="container footer-inner">
+        <span>&copy; Denis Zenios</span>
+        <span>IntellyCode</span>
       </div>
     </footer>
+
+    <script>
+      // Resolve GitHub avatar by username
+      fetch('https://api.github.com/users/IntellyCode')
+        .then(r => r.json())
+        .then(data => {
+          if (data.avatar_url) {
+            const img = document.querySelector('.nav-avatar');
+            if (img) { img.src = data.avatar_url; img.style.display = 'block'; }
+            const initials = document.getElementById('nav-initials');
+            if (initials) initials.style.display = 'none';
+          }
+        })
+        .catch(() => {});
+    </script>
 
   </body>
 </html>
