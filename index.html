@@ -406,8 +406,8 @@
           Denis Zenios
         </a>
         <ul class="nav-links">
-          <li><a href="#research">Research</a></li>
           <li><a href="#work">Work</a></li>
+          <li><a href="#research">Research</a></li>
           <li><a href="#contact">Contact</a></li>
         </ul>
       </div>
@@ -463,8 +463,97 @@
         </div>
       </section>
 
+      <!-- Projects -->
+      <section class="section-bg" id="work">
+        <div class="container">
+          <h2 class="section-title">Work</h2>
+          <p class="section-subtitle">Selected engineering work across automation, robotics, and research systems.</p>
+
+          <div class="projects-grid">
+
+            <div class="project-card">
+              <div class="project-card-top">
+                <span class="project-name">Loaden</span>
+                <span class="project-tag">Python · ROS</span>
+              </div>
+              <p class="project-desc">Frees tradespeople from carrying loads on construction sites by automating the logistics entirely. Built as the core automation stack for an autonomous load-carrying robot, covering coordination logic, motion planning, and system-level control in Python and ROS.</p>
+              <a href="https://github.com/IntellyCode/loaden_py" class="project-link" target="_blank" rel="noopener">GitHub <i class="bi bi-arrow-up-right"></i></a>
+            </div>
+
+            <div class="project-card">
+              <div class="project-card-top">
+                <span class="project-name">Loaden RS</span>
+                <span class="project-tag">Rust</span>
+              </div>
+              <p class="project-desc">Improved robot responsiveness in high-stakes situations. A Rust port of the Loaden runtime targeting edge devices with hardware accelerators, trading Python's flexibility for predictable low-latency execution and compile-time safety.</p>
+              <a href="https://github.com/IntellyCode/loaden_rs" class="project-link" target="_blank" rel="noopener">GitHub <i class="bi bi-arrow-up-right"></i></a>
+            </div>
+
+            <div class="project-card">
+              <div class="project-card-top">
+                <span class="project-name">RoboDash</span>
+                <span class="project-tag">Flask · Socket.IO · React</span>
+              </div>
+              <p class="project-desc">Gives operators a single screen to monitor a live robot without needing terminal access or raw log files. Built as a full-stack dashboard that streams telemetry, camera feeds, and system logs in real time via a Flask/Socket.IO backend and React frontend.</p>
+              <div style="display:flex;gap:1rem;">
+                <a href="https://github.com/IntellyCode/robodash-server" class="project-link" target="_blank" rel="noopener">Server <i class="bi bi-arrow-up-right"></i></a>
+                <a href="https://github.com/IntellyCode/robodash-frontend" class="project-link" target="_blank" rel="noopener">Frontend <i class="bi bi-arrow-up-right"></i></a>
+              </div>
+            </div>
+
+            <div class="project-card">
+              <div class="project-card-top">
+                <span class="project-name">reidfo</span>
+                <span class="project-tag">Python · scikit-learn</span>
+              </div>
+              <p class="project-desc">Makes regime-detection analysis reproducible and reusable across projects rather than a one-off script. A packaged Python library covering feature engineering, statistical diagnostics, copula fitting, and jump model utilities, with tests and documentation.</p>
+              <a href="https://github.com/IntellyCode/reidfo" class="project-link" target="_blank" rel="noopener">GitHub <i class="bi bi-arrow-up-right"></i></a>
+            </div>
+
+            <div class="project-card">
+              <div class="project-card-top">
+                <span class="project-name">Political Risk Regime Switching</span>
+                <span class="project-tag">Python · XGBoost · PyG</span>
+              </div>
+              <p class="project-desc">Built a system that made it systematic to detect whether sovereign risk ratings are in structurally distinct states rather than relying on visual inspection or domain intuition. The pipeline implements statistical jump models, graph auto-encoders, and tuned classifiers on political risk time series.</p>
+              <a href="https://github.com/IntellyCode/reidfo"
+                 class="project-link" target="_blank" rel="noopener">Github <i
+                      class="bi bi-arrow-up-right"></i></a>
+            </div>
+
+            <div class="project-card">
+              <div class="project-card-top">
+                <span class="project-name">NLP Franchising Pipeline</span>
+                <span class="project-tag">Python · LDA · BERT</span>
+              </div>
+              <p class="project-desc">Built a system that made it tractable to synthesise patterns across ~600 academic papers that no human team could read in full in a reasonable timeframe. The pipeline runs end-to-end NLP analysis using LDA and BERT topic modelling with semantic cross-validation and visualisations.</p>
+              <a href="https://github.com/IntellyCode/nlp_of_franchising_papers" class="project-link" target="_blank" rel="noopener">GitHub (LDA phase) <i class="bi bi-arrow-up-right"></i></a>
+            </div>
+
+            <div class="project-card">
+              <div class="project-card-top">
+                <span class="project-name">Thermal Spallation Simulation</span>
+                <span class="project-tag">FEniCSx · Gmsh · Python</span>
+              </div>
+              <p class="project-desc">Cut down time spent on physical experiments by identifying laser parameter limits in simulation before any rock is touched. A finite element model of laser-induced thermal stress in rock, built with FEniCSx and Gmsh and validated against analytical solutions.</p>
+              <a href="https://github.com/IntellyCode/thermal_spallation_simulation" class="project-link" target="_blank" rel="noopener">GitHub <i class="bi bi-arrow-up-right"></i></a>
+            </div>
+
+            <div class="project-card">
+              <div class="project-card-top">
+                <span class="project-name">Autonomous Outreach Pipeline</span>
+                <span class="project-tag">Python · Cloud</span>
+              </div>
+              <p class="project-desc">Cut the human time required to run targeted outreach campaigns to zero. A cloud-based system that accepts a high-level category instruction and operates end-to-end without intervention.</p>
+              <span class="project-private"><i class="bi bi-lock"></i> Proprietary</span>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
       <!-- Research -->
-      <section class="section-bg" id="research">
+      <section id="research">
         <div class="container">
           <h2 class="section-title">Research</h2>
           <p class="section-subtitle">Completed and ongoing projects with published or forthcoming results.</p>
@@ -495,93 +584,6 @@
           <div class="ref-block">
             <p id="ref1" style="margin:.25rem 0;"><a href="#src1">1</a> Reference letter from Prof. Stavros A. Zenios, Durham University Business School, 5 June 2025.</p>
             <p id="ref2" style="margin:.25rem 0;"><a href="#src2">2</a> Confirmation letter from Dr. Nina Gorovaia, Frederick University, 31 May 2025.</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Projects -->
-      <section id="work">
-        <div class="container">
-          <h2 class="section-title">Work</h2>
-          <p class="section-subtitle">Selected engineering work across automation, robotics, and research systems.</p>
-
-          <div class="projects-grid">
-
-            <div class="project-card">
-              <div class="project-card-top">
-                <span class="project-name">Loaden</span>
-                <span class="project-tag">Python · ROS</span>
-              </div>
-              <p class="project-desc">Automation stack for an autonomous construction assistant robot designed to carry loads upstairs, freeing tradespeople from logistics. Covers coordination logic, motion planning, and system-level control. Developed as part of an active startup.</p>
-              <a href="https://github.com/IntellyCode/loaden_py" class="project-link" target="_blank" rel="noopener">GitHub <i class="bi bi-arrow-up-right"></i></a>
-            </div>
-
-            <div class="project-card">
-              <div class="project-card-top">
-                <span class="project-name">Loaden RS</span>
-                <span class="project-tag">Rust</span>
-              </div>
-              <p class="project-desc">Performance-optimised Rust port of the Loaden runtime. Targets edge devices with hardware accelerators, delivering predictable low-latency execution and compile-time safety for embedded deployment.</p>
-              <a href="https://github.com/IntellyCode/loaden_rs" class="project-link" target="_blank" rel="noopener">GitHub <i class="bi bi-arrow-up-right"></i></a>
-            </div>
-
-            <div class="project-card">
-              <div class="project-card-top">
-                <span class="project-name">RoboDash</span>
-                <span class="project-tag">Flask · Socket.IO · React</span>
-              </div>
-              <p class="project-desc">Full-stack real-time robotics dashboard. Streams telemetry, camera feeds, and system logs to operators. Flask and Socket.IO backend, React frontend.</p>
-              <div style="display:flex;gap:1rem;">
-                <a href="https://github.com/IntellyCode/robodash-server" class="project-link" target="_blank" rel="noopener">Server <i class="bi bi-arrow-up-right"></i></a>
-                <a href="https://github.com/IntellyCode/robodash-frontend" class="project-link" target="_blank" rel="noopener">Frontend <i class="bi bi-arrow-up-right"></i></a>
-              </div>
-            </div>
-
-            <div class="project-card">
-              <div class="project-card-top">
-                <span class="project-name">reidfo</span>
-                <span class="project-tag">Python · scikit-learn</span>
-              </div>
-              <p class="project-desc">Library for time-series regime identification. Includes feature engineering, statistical diagnostics, copula fitting, and jump model utilities. Developed alongside the political risk research, packaged with tests and documentation.</p>
-              <a href="https://github.com/IntellyCode/reidfo" class="project-link" target="_blank" rel="noopener">GitHub <i class="bi bi-arrow-up-right"></i></a>
-            </div>
-
-            <div class="project-card">
-              <div class="project-card-top">
-                <span class="project-name">Political Risk Regime Switching</span>
-                <span class="project-tag">Python · XGBoost · PyG</span>
-              </div>
-              <p class="project-desc">Research pipeline for regime detection in political risk time series. Implements statistical jump models, graph auto-encoders on graphical data, and Hyperopt-tuned classifiers. Confirms statistically distinct regimes in sovereign risk ratings.</p>
-              <a href="https://github.com/IntellyCode/reidfo" class="project-link" target="_blank" rel="noopener">reidfo package <i class="bi bi-arrow-up-right"></i></a>
-            </div>
-
-            <div class="project-card">
-              <div class="project-card-top">
-                <span class="project-name">NLP Franchising Pipeline</span>
-                <span class="project-tag">Python · LDA · BERT</span>
-              </div>
-              <p class="project-desc">End-to-end NLP pipeline analysing ~600 academic conference papers with LDA and BERT topic modelling. Includes text preprocessing, semantic cross-validation, and visualisations. The resulting paper received Best Student Paper at ISoF 2025.</p>
-              <a href="https://github.com/IntellyCode/nlp_of_franchising_papers" class="project-link" target="_blank" rel="noopener">GitHub (LDA phase) <i class="bi bi-arrow-up-right"></i></a>
-            </div>
-
-            <div class="project-card">
-              <div class="project-card-top">
-                <span class="project-name">Thermal Spallation Simulation</span>
-                <span class="project-tag">FEniCSx · Gmsh · Python</span>
-              </div>
-              <p class="project-desc">Finite element simulation of thermal spallation in rock. Models how laser heat spreads through rock, then calculates the stress it causes. Validated against analytical solutions.</p>
-              <a href="https://github.com/IntellyCode/thermal_spallation_simulation" class="project-link" target="_blank" rel="noopener">GitHub <i class="bi bi-arrow-up-right"></i></a>
-            </div>
-
-            <div class="project-card">
-              <div class="project-card-top">
-                <span class="project-name">Autonomous Outreach Pipeline</span>
-                <span class="project-tag">Python · Cloud</span>
-              </div>
-              <p class="project-desc">Cloud-based system for fully autonomous targeted outreach. Accepts a high-level category instruction and operates end-to-end without human intervention. Proprietary.</p>
-              <span class="project-private"><i class="bi bi-lock"></i> Proprietary</span>
-            </div>
-
           </div>
         </div>
       </section>
