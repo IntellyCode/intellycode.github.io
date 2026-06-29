@@ -248,7 +248,6 @@
         border-top: 1px solid var(--line);
       }
 
-      .research-item:last-child { border-bottom: 1px solid var(--line); }
 
       .research-icon {
         flex-shrink: 0;
@@ -395,7 +394,7 @@
     <!-- Nav -->
     <nav>
       <div class="container nav-inner">
-        <a href="#" class="nav-brand">
+        <a href="index.html" class="nav-brand">
           <img
             class="nav-avatar"
             src="https://avatars.githubusercontent.com/u/IntellyCode"
@@ -406,9 +405,9 @@
           Denis Zenios
         </a>
         <ul class="nav-links">
-          <li><a href="#work">Work</a></li>
-          <li><a href="#research">Research</a></li>
-          <li><a href="#contact">Contact</a></li>
+          <li><a href="index.html#case-studies">Case Studies</a></li>
+          <li><a href="index.html#work">Work</a></li>
+          <li><a href="index.html#contact">Contact</a></li>
         </ul>
       </div>
     </nav>
@@ -416,55 +415,54 @@
     <main>
 
       <!-- Hero -->
-      <section class="hero flush-bottom">
+      <section class="hero">
         <div class="container">
           <h1 class="display-name">Denis Zenios</h1>
 
           <p class="hero-tagline">
-            I'm a computational engineer. I build things at the intersection of physics, engineering, and software: machine learning pipelines, robotics control systems, numerical simulations. Wherever the bottleneck is turning a hard problem into working code.
+            I'm a computational engineer. I work at the intersection of physics, engineering, and software, on the problems that don't have an off-the-shelf answer.
           </p>
-
-          <div class="btn-row">
-            <a href="#work" class="btn btn-primary">See work</a>
-            <a href="#contact" class="btn btn-ghost">Get in touch</a>
-            <a href="https://github.com/IntellyCode" class="btn btn-ghost" target="_blank" rel="noopener">
-              <i class="bi bi-github"></i> GitHub
-            </a>
-          </div>
-
-          <div class="cred-row">
-            <span class="cred-badge">
-              <i class="bi bi-award-fill"></i>
-              <span><strong>Best Student Paper</strong> <span class="cred-sub">&middot; ISoF 2025</span></span>
-            </span>
-            <span class="cred-badge">
-              <i class="bi bi-trophy-fill"></i>
-              <span><strong>FTC Robotics Champion</strong> <span class="cred-sub">&middot; Cyprus 2023</span></span>
-            </span>
-            <span class="cred-badge">
-              <i class="bi bi-code-slash"></i>
-              <span><strong>Python · Rust · Java · JavaScript</strong></span>
-            </span>
-          </div>
-
-          <hr>
+          <p class="hero-tagline">
+            The hardest problems live where several fields overlap. Take robotics: a robot that loses its target isn't a vision problem or a control problem or a software problem on its own. It's all of them at once.
+          </p>
+          <p class="hero-tagline">
+            I work across all three, producing systems whose behaviour you can trust. Only edge cases imposed by nature are out of reach. The case studies below show what that looks like.
+          </p>
         </div>
       </section>
 
-      <!-- About -->
-      <section class="flush-top">
+      <!-- Case Studies -->
+      <section class="section-bg" id="case-studies">
         <div class="container">
-          <p class="about-lead">
-            I take on the problems that don't have an off-the-shelf answer, and I solve them at the level the theory demands. The result is systems you can actually trust in production.
-          </p>
-          <p class="about-lead">
-            Recent work includes an NLP study of franchising literature that received the Best Student Paper Award at ISoF 2025, regime-switching models for political risk data, and an autonomous construction robot running real-time computer vision on edge hardware.
-          </p>
+          <h2 class="section-title">Case Studies</h2>
+          <p class="section-subtitle">A closer look at how a hard problem became a working system.</p>
+
+          <div class="research-item">
+            <div class="research-icon"><i class="bi bi-bullseye"></i></div>
+            <div>
+              <p class="research-title">Real-Time Robot Tracking, Re-architected in Rust</p>
+              <p class="research-body">
+                A vision-guided robot kept losing the person it was meant to follow whenever they moved too quickly. The problem was diagnosed as a concurrency-model failure, and the system was rearchitected from Python to Rust, after which the robot held its target where it had previously lost it, with end-to-end latency roughly halved.
+              </p>
+              <a href="case-studies/robot-tracking-rust.html" class="project-link">Read more <i class="bi bi-arrow-right"></i></a>
+            </div>
+          </div>
+
+          <div class="research-item">
+            <div class="research-icon"><i class="bi bi-robot"></i></div>
+            <div>
+              <p class="research-title">Building an AI Agent You Can Trust to Act on Your Behalf</p>
+              <p class="research-body">
+                Getting an AI to generate things is easy. Getting one you can trust to act on your behalf, unsupervised, is the hard part, and it is an engineering problem more than a prompting one. I built such a system for personalized cold outreach, where a single mistake lands in a stranger's inbox with my name on it. By hand I could write maybe 50 personalized emails a day; the system now runs until it hits the provider's send limit, around 400 to 500 a day, at the same personalization and the same reply rate, with me out of the loop.
+              </p>
+              <a href="case-studies/ai-delegation-outreach.html" class="project-link">Read more <i class="bi bi-arrow-right"></i></a>
+            </div>
+          </div>
         </div>
       </section>
 
       <!-- Projects -->
-      <section class="section-bg" id="work">
+      <section id="work">
         <div class="container">
           <h2 class="section-title">Work</h2>
           <p class="section-subtitle">Selected engineering work across automation, robotics, and research systems.</p>
@@ -503,11 +501,11 @@
 
             <div class="project-card">
               <div class="project-card-top">
-                <span class="project-name">reidfo</span>
-                <span class="project-tag">Python · scikit-learn</span>
+                <span class="project-name">Autonomous Outreach Pipeline</span>
+                <span class="project-tag">Python · Cloud</span>
               </div>
-              <p class="project-desc">Makes regime-detection analysis reproducible and reusable across projects rather than a one-off script. A packaged Python library covering feature engineering, statistical diagnostics, copula fitting, and jump model utilities, with tests and documentation.</p>
-              <a href="https://github.com/IntellyCode/reidfo" class="project-link" target="_blank" rel="noopener">GitHub <i class="bi bi-arrow-up-right"></i></a>
+              <p class="project-desc">Cut the human time required to run targeted outreach campaigns to zero. A cloud-based system that accepts a high-level category instruction and operates end-to-end without intervention.</p>
+              <span class="project-private"><i class="bi bi-lock"></i> Proprietary</span>
             </div>
 
             <div class="project-card">
@@ -517,9 +515,7 @@
               </div>
               <p class="project-desc">Built a system that made it systematic
                 to detect whether political risk ratings are in structurally distinct states rather than relying on visual inspection or domain intuition. The pipeline implements statistical jump models, graph auto-encoders, and tuned classifiers on political risk time series.</p>
-              <a href="https://github.com/IntellyCode/reidfo"
-                 class="project-link" target="_blank" rel="noopener">Github <i
-                      class="bi bi-arrow-up-right"></i></a>
+              <a href="https://github.com/IntellyCode/reidfo" class="project-link" target="_blank" rel="noopener">GitHub <i class="bi bi-arrow-up-right"></i></a>
             </div>
 
             <div class="project-card">
@@ -540,52 +536,6 @@
               <a href="https://github.com/IntellyCode/thermal_spallation_simulation" class="project-link" target="_blank" rel="noopener">GitHub <i class="bi bi-arrow-up-right"></i></a>
             </div>
 
-            <div class="project-card">
-              <div class="project-card-top">
-                <span class="project-name">Autonomous Outreach Pipeline</span>
-                <span class="project-tag">Python · Cloud</span>
-              </div>
-              <p class="project-desc">Cut the human time required to run targeted outreach campaigns to zero. A cloud-based system that accepts a high-level category instruction and operates end-to-end without intervention.</p>
-              <span class="project-private"><i class="bi bi-lock"></i> Proprietary</span>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      <!-- Research -->
-      <section id="research">
-        <div class="container">
-          <h2 class="section-title">Research</h2>
-          <p class="section-subtitle">Completed and ongoing projects with published or forthcoming results.</p>
-
-          <div class="research-item">
-            <div class="research-icon"><i class="bi bi-file-text"></i></div>
-            <div>
-              <p class="research-title">Mapping the Landscape of Franchising Research</p>
-              <p class="research-meta">Research Engineer &middot; Sep 2024 – May 2025</p>
-              <p class="research-body">
-                Applied LDA and BERT topic modelling to a corpus of ~555 ISoF conference papers (2003–2024). Led preprocessing, semantic validation through expert review, and manuscript preparation. Paper presented at ISoF 2025 in Cyprus, where it received the <strong>Best Student Paper Award</strong> for methodological rigour and contribution to franchising research.<sup><a href="#ref2" id="src2">2</a></sup>
-              </p>
-            </div>
-          </div>
-
-          <div class="research-item">
-            <div class="research-icon"><i class="bi bi-graph-up-arrow"></i></div>
-            <div>
-              <p class="research-title">Regime Switching in Political Risk</p>
-              <p class="research-meta">Research Engineer &middot; Sep 2024 –
-                May 2026</p>
-              <p class="research-body">
-                Replicated a state-of-the-art regime-switching paper and produced new results on political risk ratings data. Developed statistical jump models and graph auto-encoder approaches, with XGBoost classifiers achieving out-of-sample recall of 0.6–0.9 across regimes. Used Hyperopt for model optimisation. Statistical analysis confirms distinct regimes in political risk time series. Extended abstract accepted at an AI in Business conference.<sup><a href="#ref1" id="src1">1</a></sup>
-              </p>
-            </div>
-          </div>
-
-          <!-- References -->
-          <div class="ref-block">
-            <p id="ref1" style="margin:.25rem 0;"><a href="#src1">1</a> Reference letter from Prof. Stavros A. Zenios, Durham University Business School, 5 June 2025.</p>
-            <p id="ref2" style="margin:.25rem 0;"><a href="#src2">2</a> Confirmation letter from Dr. Nina Gorovaia, Frederick University, 31 May 2025.</p>
           </div>
         </div>
       </section>
@@ -598,11 +548,11 @@
             If there's something computational your team has wanted to try but hasn't had someone to get it working, let me know.
           </p>
           <div class="btn-row">
-            <a href="mailto:denis.zenios@tum.de" class="btn btn-primary">
-              <i class="bi bi-envelope-fill"></i> Email me
+            <a href="https://www.linkedin.com/in/denis-zenios-2b9260150/" class="btn btn-primary" target="_blank" rel="noopener">
+              <i class="bi bi-linkedin"></i> LinkedIn
             </a>
-            <a href="https://github.com/IntellyCode" class="btn btn-ghost" target="_blank" rel="noopener">
-              <i class="bi bi-github"></i> GitHub
+            <a href="mailto:denis.zenios@tum.de" class="btn btn-ghost">
+              <i class="bi bi-envelope-fill"></i> Email me
             </a>
           </div>
         </div>

@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Building an AI Agent You Can Trust to Act on Your Behalf — Denis Zenios</title>
+    <meta name="description" content="Getting an AI to generate is easy. Getting one you can trust to act unsupervised is an engineering problem. How I built a reliable autonomous outreach agent.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+      :root {
+        --green:      #176b5a;
+        --green-dark: #0f4f42;
+        --green-pale: #edf5f3;
+        --ink:        #161d1b;
+        --muted:      #5a6863;
+        --line:       #dce8e4;
+        --paper:      #f9fbfa;
+        --white:      #ffffff;
+      }
+
+      *, *::before, *::after { box-sizing: border-box; }
+
+      html { scroll-behavior: smooth; }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: var(--paper);
+        font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+        font-size: 1rem;
+        line-height: 1.65;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      h1, h2, h3 { font-family: 'DM Serif Display', Georgia, serif; font-weight: 400; }
+
+      .container {
+        width: 100%;
+        max-width: 720px;
+        margin-inline: auto;
+        padding-inline: 1.5rem;
+      }
+
+      /* ── Nav ── */
+      nav {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: rgba(249,251,250,.92);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid var(--line);
+        padding: .75rem 0;
+      }
+
+      .nav-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        max-width: 860px;
+        margin-inline: auto;
+        width: 100%;
+        padding-inline: 1.5rem;
+      }
+
+      .nav-brand {
+        display: flex;
+        align-items: center;
+        gap: .6rem;
+        text-decoration: none;
+        color: var(--ink);
+        font-weight: 600;
+        font-size: .95rem;
+      }
+
+      .nav-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 1.5px solid var(--line);
+        object-fit: cover;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 1.75rem;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .nav-links a {
+        text-decoration: none;
+        color: var(--muted);
+        font-size: .9rem;
+        font-weight: 500;
+        transition: color .15s;
+      }
+
+      .nav-links a:hover { color: var(--green); }
+
+      /* ── Article ── */
+      article { padding: 3.5rem 0 4rem; }
+
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: .3rem;
+        font-size: .85rem;
+        color: var(--muted);
+        text-decoration: none;
+        font-weight: 500;
+        margin-bottom: 2rem;
+      }
+      .back-link:hover { color: var(--green); }
+
+      .article-title {
+        font-size: clamp(1.9rem, 4vw, 2.6rem);
+        line-height: 1.15;
+        letter-spacing: -.01em;
+        margin: 0 0 1.75rem;
+      }
+
+      .summary {
+        font-size: 1.1rem;
+        line-height: 1.7;
+        color: var(--ink);
+        background: var(--green-pale);
+        border-left: 3px solid var(--green);
+        border-radius: 0 6px 6px 0;
+        padding: 1.25rem 1.5rem;
+        margin: 0 0 2.5rem;
+      }
+      .summary strong { font-weight: 600; }
+
+      article p { margin: 0 0 1.25rem; }
+
+      article ul {
+        margin: 0 0 1.25rem;
+        padding-left: 1.25rem;
+      }
+      article li { margin-bottom: .4rem; }
+
+      article strong { font-weight: 600; }
+
+      article em { font-style: italic; }
+
+      /* ── Footer ── */
+      footer {
+        padding: 1.75rem 0;
+        color: var(--muted);
+        font-size: .85rem;
+        border-top: 1px solid var(--line);
+        background: var(--white);
+      }
+
+      .footer-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 860px;
+        margin-inline: auto;
+        width: 100%;
+        padding-inline: 1.5rem;
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- Nav -->
+    <nav>
+      <div class="nav-inner">
+        <a href="../index.html" class="nav-brand">
+          <img
+            class="nav-avatar"
+            src="https://avatars.githubusercontent.com/u/IntellyCode"
+            onerror="this.style.display='none';document.getElementById('nav-initials').style.display='flex';"
+            alt="Denis Zenios"
+          >
+          <span id="nav-initials" style="display:none;width:32px;height:32px;border-radius:50%;background:var(--green);color:#fff;font-size:.8rem;font-weight:700;align-items:center;justify-content:center;">DZ</span>
+          Denis Zenios
+        </a>
+        <ul class="nav-links">
+          <li><a href="../index.html#case-studies">Case Studies</a></li>
+          <li><a href="../index.html#work">Work</a></li>
+          <li><a href="../index.html#contact">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <main>
+      <article>
+        <div class="container">
+          <a href="../index.html#case-studies" class="back-link"><i class="bi bi-arrow-left"></i> All case studies</a>
+
+          <h1 class="article-title">Building an AI Agent You Can Trust to Act on Your Behalf</h1>
+
+          <p class="summary"><strong>Getting an AI to generate things is easy. Getting one you can trust to act on your behalf, unsupervised, is the hard part, and it is an engineering problem more than a prompting one. I built such a system for personalized cold outreach, where a single mistake lands in a stranger's inbox with my name on it. By hand, I could write maybe 50 personalized emails a day. The system now runs until it hits the email provider's send limit, around 400 to 500 a day, at the same personalization and the same reply rate, with me out of the loop.</strong></p>
+
+          <p>Most people use AI as a thing that hands work back to them. You ask it to write something, summarize something, or answer a question, and you are sitting right there to read what comes back and catch the mistakes before they matter. That is the easy half. The hard half is handing an AI a real task with real consequences and walking away, trusting it to run on its own with nobody reading every line before it leaves. That is the difference between a tool that drafts and an agent that acts, and the second one is where most people get it wrong.</p>
+
+          <p>So how does one build such a system? Let's discuss it in the context of cold outreach.</p>
+
+          <p>Cold outreach is everywhere. A freelancer looking for clients, a construction firm bidding for public projects, a company trying to hire, it's all the same loop. You find people who might care, and you reach out to them one at a time. It is also miserable. Reply rates sit somewhere around 1 to 3 percent on a good day, often less, so it wears you down by design. The one thing that actually moves that number is personalization. A generic template is quick to send and converts almost nothing. An email that shows you understood who you are writing to converts far better, and it is slow.</p>
+
+          <p>Slow in a way you can measure. A professional doing this full-time, eight hours a day, manages maybe 50 personalized emails, each taking approximately 10 minutes. That is already the top end. And the whole time it is shallow work, the kind that produces nothing lasting and exists only to be gotten through. It is exactly the work you would hand off, if you could trust the thing you handed it to.</p>
+
+          <p>So why not just point an AI at it? Write a prompt, loop it over a list, send. It does not work, and understanding why it does not work is the whole point.</p>
+
+          <p>An AI is very good at generating and very bad at three things this task needs. It hallucinates, so it will confidently invent a contact, a fact, a detail about a company that is simply not real. It forgets, because over a long run the context fills up and the early details fall out, so it loses track of who it has already written to and what it found. And it has no skin in the game, so it does not feel the difference between a typo and emailing the wrong person at the wrong company. Picture the worst version: a flawless, friendly, well-written email, addressed to the wrong founder, citing a fact about a company that does not exist, sent under your name. You most likely destroyed your chances with that prospect.</p>
+
+          <p>So how do you ensure the AI doesn't forget, doesn't hallucinate, and at least tries to be thorough?</p>
+
+          <p>Let the AI do only the part it is genuinely good at, reasoning and writing, and force everything else into code that cannot hallucinate. Tracking, remembering, checking its own facts, none of that belongs to the AI. Build the structure so it never has to, and so it gets caught the moment it invents. For example, when it tries to add a prospect to the list, a script verifies that the source URL resolves and returns "Wrong Link" if it does not. Catch the mistake where it happens.</p>
+
+          <p>That shaped the system into a few clear stages, each a decision about what the AI is trusted with and what it is not.</p>
+
+          <p>It starts with scouting. Subagents go and find prospects, search them, read their sites, and pull together what is public and useful. Not "a robotics company in Munich," but a company that builds warehouse robots, just posted three openings for control engineers, and shipped a product that keeps tripping over the same perception problem. That is research and generation, which the AI does well (most of the time), so it is given room here.</p>
+
+          <p>Then comes the part on which everything rests. The scouted data does not reach the database on the AI's word. It goes through a deterministic script that inserts it, and that script does the validating, because the AI cannot be trusted to check itself. Every source and fact the AI tries to write is confirmed first, either by a second model checking the first or by a deterministic check whenever possible. The hallucination is caught at the door, before it can ever become an email.</p>
+
+          <p>After that, the AI reasons over the data that survived. Is this right? Is this the best basis to work from? And here I had to do something that sounds strange but matters. I gave the AI a stake. An AI has nothing to lose, so you have to manufacture something for it to lose. You tell it plainly that it is writing on behalf of a real person, and that a careless mistake will not stay small, it will cascade into real consequences for the human it is standing in for. Making the AI carry that weight, and actually think before it commits, visibly changes what it produces.</p>
+
+          <p>Only then do the emails get drafted. Everyone follows the same skeleton, so the structure stays reliable. Still, the part that matters is written fresh for the person: a first line that names the actual problem their company is wrestling with, not a greeting that would fit any company on the list. Some of that is AI judgment, and some of it is plain scripting, each doing the part it is suited to.</p>
+
+          <p>There is one more thing. The system initially was not perfect. It made mistakes, I corrected them, and the lesson is that correcting an AI once does almost nothing on its own. So the first several runs were only half automated. I checked the results after each stage, watched for where it hallucinated or slipped, and then, and this is the important bit, I had it write down a memory of that exact mistake so it would not make it again.</p>
+
+          <p>And there is a catch in how you have to teach it. A human generalizes. Show a person one example, and they pull out the principle and apply it everywhere until it breaks. An AI is worse at that jump. It does better when you hand it the explicit list of things not to do rather than the principle behind them. Telling the AI "sugar is bad for you" is weaker than telling it "do not recommend sugar, do not recommend chocolate, do not recommend honey." So the memory I built was never a tidy set of principles. It was a concrete, growing list of specific mistakes already seen and to be avoided, which is the form an AI actually uses well.</p>
+
+          <p>Now the obvious question. Isn't this just spam? Anyone can point an AI at a list and blast generic junk at the whole world. That is a fair thing to ask, and the honest answer is the whole point of the system.</p>
+
+          <p>It is spam precisely when there are no rails. The AI runs unchecked, the content is generic, the facts are made up, and nobody stands behind any of it. That is the exact failure I spent the whole build trying to prevent. What this system does is the opposite. Every email is personalized and built on real, validated information about the actual person and company, not invented. There are real stakes wired into how it reasons. And the framing is not an AI off on its own, messaging the world as it pleases. It is a person handing a bounded, well-defined task to an AI that can do it reliably and faster, while faithfully carrying the intentions of the person it acts for. The line between this and spam is the same as between an agent you can trust and one you cannot.</p>
+
+          <p>So what happened in the end? By hand, I could write no more than about 50 personalized emails a day. With the system running, the limit is no longer me. On a full day, it runs until it reaches the email provider's send cap, somewhere around 400 to 500 emails, each researched and personalized for its recipient. The bottleneck moved off me completely.</p>
+
+          <p>And that is the real result, which is not really about email at all. The shallow work now runs on its own at machine speed, reliably enough to leave alone, which frees me to focus on the deep work that actually creates something.</p>
+        </div>
+      </article>
+    </main>
+
+    <footer>
+      <div class="footer-inner">
+        <span>&copy; Denis Zenios</span>
+        <span>IntellyCode</span>
+      </div>
+    </footer>
+
+    <script>
+      fetch('https://api.github.com/users/IntellyCode')
+        .then(r => r.json())
+        .then(data => {
+          if (data.avatar_url) {
+            const img = document.querySelector('.nav-avatar');
+            if (img) { img.src = data.avatar_url; img.style.display = 'block'; }
+            const initials = document.getElementById('nav-initials');
+            if (initials) initials.style.display = 'none';
+          }
+        })
+        .catch(() => {});
+    </script>
+
+  </body>
+</html>
