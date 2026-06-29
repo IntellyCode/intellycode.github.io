@@ -100,6 +100,7 @@
 
       .nav-links {
         display: flex;
+        align-items: center;
         gap: 1.75rem;
         list-style: none;
         margin: 0;
@@ -111,10 +112,17 @@
         color: var(--muted);
         font-size: .9rem;
         font-weight: 500;
+        white-space: nowrap;
         transition: color .15s;
       }
 
       .nav-links a:hover { color: var(--green); }
+
+      @media (max-width: 480px) {
+        .nav-links { gap: 1rem; }
+        .nav-links a { font-size: .82rem; }
+        .nav-brand { font-size: .88rem; }
+      }
 
       /* ── Hero ── */
       .hero { padding: 5rem 0 2rem; }
@@ -551,7 +559,7 @@
             <a href="https://www.linkedin.com/in/denis-zenios-2b9260150/" class="btn btn-primary" target="_blank" rel="noopener">
               <i class="bi bi-linkedin"></i> LinkedIn
             </a>
-            <a href="mailto:denis.zenios@tum.de" class="btn btn-ghost">
+            <a href="mailto:denis.zenios@gmail.com" class="btn btn-ghost">
               <i class="bi bi-envelope-fill"></i> Email me
             </a>
           </div>
