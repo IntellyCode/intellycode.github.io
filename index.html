@@ -107,22 +107,25 @@
         padding: 0;
       }
 
+      .nav-links li {
+        flex: 0 0 auto;
+      }
+
+      @media (max-width: 560px) {
+        .nav-links li { width: min-content; }
+      }
+
       .nav-links a {
+        display: flex;
+        align-items: center;
         text-decoration: none;
         color: var(--muted);
         font-size: .9rem;
         font-weight: 500;
-        white-space: nowrap;
         transition: color .15s;
       }
 
       .nav-links a:hover { color: var(--green); }
-
-      @media (max-width: 480px) {
-        .nav-links { gap: 1rem; }
-        .nav-links a { font-size: .82rem; }
-        .nav-brand { font-size: .88rem; }
-      }
 
       /* ── Hero ── */
       .hero { padding: 5rem 0 2rem; }
