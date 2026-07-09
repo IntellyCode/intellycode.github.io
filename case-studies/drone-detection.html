@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Detecting and Tracking Flying Objects — Denis Zenios</title>
+    <meta name="description" content="A real-time system that detects drones, tells them apart from birds and planes, and forecasts where each is heading, beating the published state of the art.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+      :root {
+        --green:      #176b5a;
+        --green-dark: #0f4f42;
+        --green-pale: #edf5f3;
+        --ink:        #161d1b;
+        --muted:      #5a6863;
+        --line:       #dce8e4;
+        --paper:      #f9fbfa;
+        --white:      #ffffff;
+      }
+
+      *, *::before, *::after { box-sizing: border-box; }
+
+      html { scroll-behavior: smooth; }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: var(--paper);
+        font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+        font-size: 1rem;
+        line-height: 1.65;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      h1, h2, h3 { font-family: 'DM Serif Display', Georgia, serif; font-weight: 400; }
+
+      .container {
+        width: 100%;
+        max-width: 720px;
+        margin-inline: auto;
+        padding-inline: 1.5rem;
+      }
+
+      /* ── Nav ── */
+      nav {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: rgba(249,251,250,.92);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid var(--line);
+        padding: .75rem 0;
+      }
+
+      .nav-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        max-width: 860px;
+        margin-inline: auto;
+        width: 100%;
+        padding-inline: 1.5rem;
+      }
+
+      .nav-brand {
+        display: flex;
+        align-items: center;
+        gap: .6rem;
+        text-decoration: none;
+        color: var(--ink);
+        font-weight: 600;
+        font-size: .95rem;
+      }
+
+      .nav-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 1.5px solid var(--line);
+        object-fit: cover;
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 1.75rem;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .nav-links li {
+        flex: 0 0 auto;
+      }
+
+      @media (max-width: 560px) {
+        .nav-links li { width: min-content; }
+      }
+
+      .nav-links a {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: var(--muted);
+        font-size: .9rem;
+        font-weight: 500;
+        transition: color .15s;
+      }
+
+      .nav-links a:hover { color: var(--green); }
+
+      /* ── Article ── */
+      article { padding: 3.5rem 0 4rem; }
+
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: .3rem;
+        font-size: .85rem;
+        color: var(--muted);
+        text-decoration: none;
+        font-weight: 500;
+        margin-bottom: 2rem;
+      }
+      .back-link:hover { color: var(--green); }
+
+      .article-title {
+        font-size: clamp(1.9rem, 4vw, 2.6rem);
+        line-height: 1.15;
+        letter-spacing: -.01em;
+        margin: 0 0 1.75rem;
+      }
+
+      .summary {
+        font-size: 1.1rem;
+        line-height: 1.7;
+        color: var(--ink);
+        background: var(--green-pale);
+        border-left: 3px solid var(--green);
+        border-radius: 0 6px 6px 0;
+        padding: 1.25rem 1.5rem;
+        margin: 0 0 2.5rem;
+      }
+      .summary strong { font-weight: 600; }
+
+      article p { margin: 0 0 1.25rem; }
+
+      article ul {
+        margin: 0 0 1.25rem;
+        padding-left: 1.25rem;
+      }
+      article li { margin-bottom: .4rem; }
+
+      article strong { font-weight: 600; }
+
+      article em { font-style: italic; }
+
+      /* ── Footer ── */
+      footer {
+        padding: 1.75rem 0;
+        color: var(--muted);
+        font-size: .85rem;
+        border-top: 1px solid var(--line);
+        background: var(--white);
+      }
+
+      .footer-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 860px;
+        margin-inline: auto;
+        width: 100%;
+        padding-inline: 1.5rem;
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- Nav -->
+    <nav>
+      <div class="nav-inner">
+        <a href="../index.html" class="nav-brand">
+          <img
+            class="nav-avatar"
+            src="https://avatars.githubusercontent.com/u/IntellyCode"
+            onerror="this.style.display='none';document.getElementById('nav-initials').style.display='flex';"
+            alt="Denis Zenios"
+          >
+          <span id="nav-initials" style="display:none;width:32px;height:32px;border-radius:50%;background:var(--green);color:#fff;font-size:.8rem;font-weight:700;align-items:center;justify-content:center;">DZ</span>
+          Denis Zenios
+        </a>
+        <ul class="nav-links">
+          <li><a href="../index.html#case-studies">Case Studies</a></li>
+          <li><a href="../index.html#work">Work</a></li>
+          <li><a href="../index.html#contact">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <main>
+      <article>
+        <div class="container">
+          <a href="../index.html#case-studies" class="back-link"><i class="bi bi-arrow-left"></i> All case studies</a>
+
+          <h1 class="article-title">Detecting and Tracking<br> Flying Objects</h1>
+
+          <p class="summary"><strong>A startup needed to see drones in the sky reliably, tell them apart from the birds and planes that fool most detectors, and know where each one was heading. I built a real-time system that does all three, and beats the published state of the art at drone detection on every object size, on the same public benchmark. On one brutally hard clip the best published model missed the drone in all 300 frames; mine found it in 262.</strong></p>
+
+          <p>A startup working in the drone space needed to detect drones. They were still exploring where their technology goes, so the detector had to serve experiments they had not fully defined yet. Track a drone in flight. Spot one at a distance. Tell a drone apart from everything else in the sky. The one thing that was certain is that whatever they built next would need to trust what the camera was telling it, and a detector you cannot trust is worse than none at all.</p>
+
+          <p>Detecting a drone sounds like a solved problem. An object detector draws a box around a thing and names it, and there are good published models that do exactly this for drones. So the reasonable first move was to take the best one and reproduce it. If the state of the art already works, you stand on it.</p>
+
+          <p>Here is the first thing that went wrong. I picked the newest detection backbone as the foundation, because newer usually means better. But the published drone models were built on an older one, and most of the clever tricks in those papers, the special attention modules, the loss tuned for tiny objects, existed to patch weaknesses in that older base. The new backbone had already absorbed them. So when I ported those innovations onto it, they did nothing, or made it worse. Even the paper's custom small-object loss was redundant here; the stock one did as well or better. I was adding a second lock to a door that already had one.</p>
+
+          <p>The reason those tricks failed is not that they were bad. It is that they were answers to a question the newer model no longer asked. One change did earn its place: a high-resolution detection head that gives the model a finer view of small, distant objects, which is the whole game when a drone is far away. With the base already doing most of the work the old papers did by hand, the harder problems turned out to lie elsewhere.</p>
+
+          <p>One of them was the data. The four-class model, the one that separates drone from bird, airplane, and helicopter, started out hallucinating. It fired confident boxes at empty blue sky, at nothing at all. The instinct is to blame the model, but the fault was in what it had been fed. The public datasets behind it were subtly corrupted: synthetic-looking birds crudely cropped into skies with hard, unnatural borders, so the model had learned that a sharp edge against blue meant "object." And there were almost no examples of genuinely tiny, distant targets, the exact case that matters most when a drone is far away.</p>
+
+          <p>Once the cause was clear the fix followed: work out which datasets were teaching the model the wrong thing, drop them, and build up the coverage of small distant objects that was missing. The diagnosis was the hard part. The correction was mechanical once you knew what to correct for.</p>
+
+          <p>So what came of it? Start with the detector built to do one thing, find drones. On the same public footage, it beats the published state of the art across the whole spectrum of object sizes, from tiny distant specks to large close ones. The margin is widest exactly where it is hardest, on the smallest, most distant drones, which is the case that matters most in the field. That was the goal, and it was met.</p>
+
+          <p>Then I built a second model, and this is where it gets interesting. This one does not just find drones, it separates four kinds of flying object, drone from bird from airplane from helicopter. You would expect it to be a worse drone detector than the specialist, because it is dividing its attention four ways instead of pouring it all into one target. It is not. Here is the fact that surprised me. There is a brutally hard clip in the benchmark, a drone so small and distant it is barely there. The published baseline found it in zero of its 300 frames. My own single-class specialist, the one tuned only for drones, found it in just one. The four-class model found it in 262 of 300, at high confidence, with almost no false alarms. Teaching the model to tell four things apart had made it better at seeing the hardest drone than the model that only ever looked for drones.</p>
+
+          <p>Why would that happen? Because to reliably call something a drone, it helps to know what a drone is not. A model that has learned the shape of a bird and the shape of a helicopter has a sharper idea of the thing in front of it, and stops guessing. That is the deeper payoff of the four classes, and it shows up as a plain practical benefit too. A drone-only detector has one word, so everything that flies is a candidate drone. Show it a helicopter and it will often say drone, confidently and wrongly. A four-class model can say for certain whether it is a drone, a helicopter, a bird, or nothing at all.</p>
+
+          <p>There is a third piece, the forecasting. The system does not just see where each object is, it predicts where it is going, rolling every track forward over the next twenty frames and drawing that as an uncertainty cloud on the video. The cloud is a genuine bound, not decoration: even on the worst clip tested, the object's real position landed inside it more than 82 percent of the time, and on the cleaner cases well above that. So the system tells you not only what is in the sky right now, but where it will be a moment from now, which is exactly what you need if you intend to act on it.</p>
+
+          <p>That is the whole of it. The published state of the art was the bar, and the final system cleared it, while telling four kinds of flying object apart and forecasting where each one is headed. A detector the startup can actually trust to build on.</p>
+        </div>
+      </article>
+    </main>
+
+    <footer>
+      <div class="footer-inner">
+        <span>&copy; Denis Zenios</span>
+        <span>IntellyCode</span>
+      </div>
+    </footer>
+
+    <script>
+      fetch('https://api.github.com/users/IntellyCode')
+        .then(r => r.json())
+        .then(data => {
+          if (data.avatar_url) {
+            const img = document.querySelector('.nav-avatar');
+            if (img) { img.src = data.avatar_url; img.style.display = 'block'; }
+            const initials = document.getElementById('nav-initials');
+            if (initials) initials.style.display = 'none';
+          }
+        })
+        .catch(() => {});
+    </script>
+
+  </body>
+</html>
