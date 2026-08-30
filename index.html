@@ -113,6 +113,8 @@
 
       @media (max-width: 560px) {
         .nav-links li { width: min-content; }
+        .nav-brand-text { display: none; }
+        .nav-hide-mobile { display: none; }
       }
 
       .nav-links a {
@@ -362,6 +364,61 @@
         margin-top: .75rem;
       }
 
+      /* ── Testimonials ── */
+      .testimonials-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: .85rem;
+        margin-top: 1.5rem;
+      }
+
+      @media (max-width: 600px) {
+        .testimonials-grid { grid-template-columns: 1fr; }
+      }
+
+      .testimonial-card {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 1.25rem;
+        background: var(--white);
+        display: flex;
+        flex-direction: column;
+        transition: box-shadow .15s, border-color .15s;
+      }
+
+      .testimonial-card:hover {
+        box-shadow: 0 2px 16px rgba(0,0,0,.05);
+        border-color: #bdd1cc;
+      }
+
+      .testimonial-quote {
+        font-size: 1.02rem;
+        color: var(--ink);
+        margin: 0 0 1rem;
+        line-height: 1.7;
+        flex-grow: 1;
+      }
+
+      .testimonial-quote::before { content: "\201C"; }
+      .testimonial-quote::after { content: "\201D"; }
+
+      .testimonial-attrib {
+        border-top: 1px solid var(--line);
+        padding-top: .75rem;
+      }
+
+      .testimonial-name {
+        font-weight: 600;
+        font-size: .92rem;
+        color: var(--ink);
+      }
+
+      .testimonial-role {
+        font-size: .85rem;
+        color: var(--muted);
+        display: block;
+      }
+
       /* ── References ── */
       .ref-block {
         font-size: .75rem;
@@ -413,11 +470,12 @@
             alt="Denis Zenios"
           >
           <span id="nav-initials" style="display:none;width:32px;height:32px;border-radius:50%;background:var(--green);color:#fff;font-size:.8rem;font-weight:700;align-items:center;justify-content:center;">DZ</span>
-          Denis Zenios
+          <span class="nav-brand-text">Denis Zenios</span>
         </a>
         <ul class="nav-links">
-          <li><a href="index.html#case-studies">Case Studies</a></li>
-          <li><a href="index.html#work">Work</a></li>
+          <li class="nav-hide-mobile"><a href="index.html#case-studies">Case Studies</a></li>
+          <li class="nav-hide-mobile"><a href="index.html#work">Work</a></li>
+          <li class="nav-hide-mobile"><a href="index.html#testimonials">Testimonials</a></li>
           <li><a href="index.html#contact">Contact</a></li>
         </ul>
       </div>
@@ -574,6 +632,43 @@
               </div>
               <p class="project-desc">Frees tradespeople from carrying loads on construction sites by automating the logistics entirely. Built as the core automation stack for an autonomous load-carrying robot, covering coordination logic, motion planning, and system-level control in Python and ROS.</p>
               <a href="https://github.com/IntellyCode/loaden_py" class="project-link" target="_blank" rel="noopener">GitHub <i class="bi bi-arrow-up-right"></i></a>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+
+      <!-- Testimonials -->
+      <section id="testimonials">
+        <div class="container">
+          <h2 class="section-title">What clients say</h2>
+          <p class="section-subtitle">From the reference letters of people I worked with directly.</p>
+
+          <div class="testimonials-grid">
+
+            <div class="testimonial-card">
+              <p class="testimonial-quote">Much of the difficulty was in the robot rather than the code. Its SDK was poorly documented, and a fair amount of the machine's behavior had to be determined by running it and observing it rather than by reading what it was meant to do. He worked through that independently. Midway through, I saw the robot hit an obstacle and tip over, and asked what could be done. He suggested using the lidar already on the robot to stop it acting close to an obstacle, and implemented it within the week without the rest of the schedule slipping.</p>
+              <div class="testimonial-attrib">
+                <div class="testimonial-name">Edgar Lemaire</div>
+                <div class="testimonial-role">Founder &amp; CEO, Durance AI</div>
+              </div>
+            </div>
+
+            <div class="testimonial-card">
+              <p class="testimonial-quote">He began by reproducing the published model we were benchmarking against, matching its reported results to within about one percent, before building a new model that outperformed it. He worked largely independently. I gave him a broad problem, and he returned a scoped one, solved and well documented. The work he handed back was clear and checkable. I would be glad to work with him again.</p>
+              <div class="testimonial-attrib">
+                <div class="testimonial-name">Vitalii Kapranov</div>
+                <div class="testimonial-role">CTO, PowerIn Space UG</div>
+              </div>
+            </div>
+
+            <div class="testimonial-card">
+              <p class="testimonial-quote">He is the kind of engineer who can take a loosely defined problem and turn it into a working system. The code he leaves behind is tested, documented, and structured so that others in the lab can build on it.</p>
+              <div class="testimonial-attrib">
+                <div class="testimonial-name">Antonis Savva, PhD</div>
+                <div class="testimonial-role">Research Associate, KIOS Research and Innovation Center of Excellence, University of Cyprus</div>
+              </div>
             </div>
 
           </div>
