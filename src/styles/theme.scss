@@ -32,7 +32,7 @@ $offcanvas-horizontal-width: min(88vw, 380px);
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: t.$header-height;
+  scroll-padding-top: calc(#{t.$header-height} + env(safe-area-inset-top));
 }
 
 body {

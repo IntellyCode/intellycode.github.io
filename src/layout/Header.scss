@@ -3,6 +3,7 @@
 .site-header {
   background: rgba(249, 251, 250, .8);
   backdrop-filter: saturate(1.6) blur(14px);
+  padding-top: env(safe-area-inset-top);
   border-bottom: 1px solid transparent;
   transition: border-color .3s;
 
