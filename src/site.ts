@@ -1,4 +1,5 @@
 export const site = {
+  origin: 'https://intellycode.dev',
   name: 'Denis Zenios',
   brand: 'IntellyCode',
   role: 'Computational Engineer',

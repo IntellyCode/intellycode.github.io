@@ -15,7 +15,20 @@ export default function Article({ entry, series }: Props) {
 
   return (
     <article className="section-white py-5">
-      <Seo title={`${meta.title} — ${site.name}`} description={meta.description} />
+      <Seo
+        title={`${meta.title} — ${site.name}`}
+        description={meta.description}
+        schema={{
+          '@context': 'https://schema.org',
+          '@type': 'Article',
+          headline: meta.title,
+          description: meta.description,
+          url: `${site.origin}/${entry.kind}/${entry.slug}`,
+          author: { '@type': 'Person', name: site.name, url: site.origin },
+          publisher: { '@type': 'Person', name: site.name, url: site.origin },
+          ...(meta.date && { datePublished: meta.date }),
+        }}
+      />
       <div aria-hidden className="read-progress" />
       <div className="container pt-md-4" style={{ maxWidth: 768 }}>
         <a href={isBlog ? '/blog' : '/#case-studies'} className="d-inline-flex gap-1 small text-body-secondary mb-4">

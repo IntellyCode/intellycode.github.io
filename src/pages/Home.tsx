@@ -9,7 +9,21 @@ import { site } from '../site'
 export default function Home() {
   return (
     <>
-      <Seo title={`${site.name} — ${site.role}`} description={site.description} />
+      <Seo
+        title={`${site.name} — ${site.role}`}
+        description={site.description}
+        schema={{
+          '@context': 'https://schema.org',
+          '@type': 'Person',
+          name: site.name,
+          jobTitle: site.role,
+          description: site.description,
+          url: site.origin,
+          image: site.avatar,
+          email: `mailto:${site.email}`,
+          sameAs: [site.linkedin, site.github],
+        }}
+      />
       <Hero />
       <CaseStudies />
       <Testimonials />
