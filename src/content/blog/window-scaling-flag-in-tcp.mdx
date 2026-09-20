@@ -1,0 +1,41 @@
+---
+title: Window Scaling flag in TCP
+description: >-
+  A user space IP stack capped throughput at 2.62 Mbps. The cause was TCP's
+  16-bit window size field with window scaling switched off.
+summary: >-
+  Throughput on a TCP connection is a function of how much data you can have in
+  flight and how long an acknowledgement takes to come back. With window scaling
+  hard coded to 0, the window caps at 65,535 bytes, which is the whole
+  explanation for a 2.62 Mbps ceiling at a 200ms round trip.
+date: "2026-09-20"
+icon: diagram-3
+---
+
+Recently I've been working on networking applications in Rust. Part of that meant implementing a user space IP stack, meaning the TCP/IP logic runs in an application process instead of the OS kernel, so I could control and modify it directly. For the numbers below, assume a round trip time of 200ms.
+
+I had a strong internet connection, but throughput on the link was capped at around 2.62 Mbps. Throughput on a TCP connection is not just a property of the link. It's a function of two things: how much data you're allowed to have in flight before waiting for an acknowledgement, and how long that acknowledgement takes to come back.
+
+$$
+\text{throughput} = \frac{\text{window size}}{\text{round trip time}}
+$$
+
+The library I was using for the user space stack hard coded the window scaling factor to 0. With window scaling off, TCP's window size field is limited to 16 bits, capping the window at 65,535 bytes regardless of how fast or short the round trip is. That cap is the entire explanation for my throughput ceiling.
+
+$$
+\frac{65{,}535 \text{ bytes}}{0.2 \text{ s}} \approx 2.62 \text{ Mbps}
+$$
+
+Window scaling is a TCP option that multiplies the window size field by $2^s$, where $s$ is the scale factor, up to a maximum of 14. That raises the effective window from 65,535 bytes to just over 1 gigabyte.
+
+$$
+\text{effective window} = \text{window field} \times 2^{s}, \quad 0 \le s \le 14
+$$
+
+With window scaling implemented properly, the maximum throughput per TCP connection is no longer capped by a fixed 65KB window. It's defined by the same formula, but now with $s$ able to go up to 14, and the round trip time as the only remaining limit. At the same 200ms round trip time, the maximum throughput is now:
+
+$$
+\frac{65{,}535 \text{ bytes} \times 2^{14}}{0.2 \text{ s}} \approx 43 \text{ Gbps}
+$$
+
+Far past what a 1 Gbit link could ever carry.

@@ -1,0 +1,89 @@
+@use 'tokens' as t;
+
+$primary: t.$green;
+$green-dark: t.$green-dark;
+$green-pale: t.$pale;
+$body-bg: t.$paper;
+$body-color: t.$ink;
+$body-secondary-color: t.$muted;
+$border-color: t.$line;
+
+$font-family-sans-serif: t.$sans;
+$headings-font-family: t.$serif;
+$headings-font-weight: 400;
+$line-height-base: 1.65;
+$border-radius: .625rem;
+$border-radius-lg: .75rem;
+$btn-border-radius: 999px;
+$btn-border-radius-lg: 999px;
+$btn-padding-x: 1.35rem;
+$btn-padding-x-lg: 1.5rem;
+$btn-font-size-lg: 1rem;
+$btn-font-weight: 500;
+$link-decoration: none;
+$link-hover-decoration: underline;
+$card-border-color: $border-color;
+$card-bg: t.$white;
+$container-padding-x: 2rem;
+$container-max-widths: (sm: 540px, md: 720px, lg: 960px, xl: 1080px, xxl: 1080px);
+$offcanvas-horizontal-width: min(88vw, 380px);
+
+@import 'bootstrap/scss/bootstrap';
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: t.$header-height;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+#root {
+  display: contents;
+}
+
+h1, h2, h3, h4 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+::selection {
+  background: t.$pale;
+  color: t.$green-dark;
+}
+
+.btn-primary {
+  --bs-btn-hover-bg: #{t.$green-dark};
+  --bs-btn-hover-border-color: #{t.$green-dark};
+}
+
+.btn-ghost {
+  --bs-btn-color: #{t.$ink};
+  --bs-btn-border-color: #{t.$line};
+  --bs-btn-hover-color: #{t.$green};
+  --bs-btn-hover-border-color: #{t.$muted};
+  --bs-btn-active-border-color: #{t.$muted};
+}
+
+.bg-pale {
+  background: t.$pale;
+}
+
+.text-green-dark {
+  color: t.$green-dark;
+}
+
+.font-serif {
+  font-family: t.$serif;
+}
+
+@view-transition {
+  navigation: auto;
+}

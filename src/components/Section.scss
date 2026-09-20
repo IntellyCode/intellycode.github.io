@@ -1,0 +1,28 @@
+@use '../styles/tokens' as t;
+
+.section-title {
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  letter-spacing: -.01em;
+}
+
+.section-white {
+  background: t.$white;
+  border-top: 1px solid t.$line;
+  border-bottom: 1px solid t.$line;
+
+  &:last-child {
+    flex-grow: 1;
+    border-bottom: 0;
+  }
+}
+
+.section-pale {
+  background: t.$tint;
+}
+
+@media (min-width: 992px) {
+  .section-rail {
+    position: sticky;
+    top: 7rem;
+  }
+}

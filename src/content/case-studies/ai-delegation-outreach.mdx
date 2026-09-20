@@ -1,0 +1,56 @@
+---
+title: Building an AI Agent You Can Trust to Act on Your Behalf
+description: >-
+  Getting an AI to generate is easy. Getting one you can trust to act
+  unsupervised is an engineering problem. How I built a reliable autonomous
+  outreach agent.
+summary: >-
+  Getting an AI to generate things is easy. Getting one you can trust to act on
+  someone's behalf, unsupervised, is the hard part, and it is an engineering
+  problem more than a prompting one. I built such a system for personalized
+  cold outreach, where a single mistake lands in a stranger's inbox. By hand,
+  one can write maybe 50 personalized emails a day. The system can now run until
+  it hits the email provider's send limit, which is ten times higher than that,
+  at the same personalization and the same reply rate, with the operator out of
+  the loop.
+icon: robot
+order: 3
+---
+
+Most people use AI as a thing that hands work back to them. You ask it to write something, summarize something, or answer a question, and you are sitting right there to read what comes back and catch the mistakes before they matter. That is the easy half. The hard half is handing an AI a real task with real consequences and walking away, trusting it to run on its own with nobody reading every line before it leaves. That is the difference between a tool that drafts and an agent that acts, and the second one is where most people get it wrong.
+
+So how does one build such a system? Let's discuss it in the context of cold outreach.
+
+Cold outreach is everywhere. A freelancer looking for clients, a construction firm bidding for public projects, a company trying to hire, it's all the same loop. You find people who might care, and you reach out to them one at a time. It is also miserable. Reply rates sit somewhere around 1 to 3 percent on a good day, often less, so it wears you down by design. The one thing that actually moves that number is personalization. A generic template is quick to send and converts almost nothing. An email that shows you understood who you are writing to converts far better, and it is slow.
+
+Slow in a way you can measure. A professional doing this full-time, eight hours a day, manages maybe 50 personalized emails, each taking approximately 10 minutes. That is already the top end. And the whole time it is shallow work, the kind that produces nothing lasting and exists only to be gotten through. It is exactly the work you would hand off, if you could trust the thing you handed it to.
+
+So why not just point an AI at it? Write a prompt, loop it over a list, send. It does not work, and understanding why it does not work is the whole point.
+
+An AI is very good at generating and very bad at three things this task needs. It hallucinates, so it will confidently invent a contact, a fact, a detail about a company that is simply not real. It forgets, because over a long run the context fills up and the early details fall out, so it loses track of who it has already written to and what it found. And it has no skin in the game, so it does not feel the difference between a typo and emailing the wrong person at the wrong company. Picture the worst version: a flawless, friendly, well-written email, addressed to the wrong founder, citing a fact about a company that does not exist, sent under your name. You most likely destroyed your chances with that prospect.
+
+So how do you ensure the AI doesn't forget, doesn't hallucinate, and at least tries to be thorough?
+
+Let the AI do only the part it is genuinely good at, reasoning and writing, and force everything else into code that cannot hallucinate. Tracking, remembering, checking its own facts, none of that belongs to the AI. Build the structure so it never has to, and so it gets caught the moment it invents. For example, when it tries to add a prospect to the list, a script verifies that the source URL resolves and returns "Wrong Link" if it does not. Catch the mistake where it happens.
+
+That shaped the system into a few clear stages, each a decision about what the AI is trusted with and what it is not.
+
+It starts with scouting. Subagents go and find prospects, search them, read their sites, and pull together what is public and useful. Not "a robotics company in Munich," but a company that builds warehouse robots, just posted three openings for control engineers, and shipped a product that keeps tripping over the same perception problem. That is research and generation, which the AI does well (most of the time), so it is given room here.
+
+Then comes the part on which everything rests. The scouted data does not reach the database on the AI's word. It goes through a deterministic script that inserts it, and that script does the validating, because the AI cannot be trusted to check itself. Every source and fact the AI tries to write is confirmed first, either by a second model checking the first or by a deterministic check whenever possible. The hallucination is caught at the door, before it can ever become an email.
+
+After that, the AI reasons over the data that survived. Is this right? Is this the best basis to work from? And here I had to do something that sounds strange but matters. I gave the AI a stake. An AI has nothing to lose, so you have to manufacture something for it to lose. You tell it plainly that it is writing on behalf of a real person, and that a careless mistake will not stay small, it will cascade into real consequences for the human it is standing in for. Making the AI carry that weight, and actually think before it commits, visibly changes what it produces.
+
+Only then do the emails get drafted. Everyone follows the same skeleton, so the structure stays reliable. Still, the part that matters is written fresh for the person: a first line that names the actual problem their company is wrestling with, not a greeting that would fit any company on the list. Some of that is AI judgment, and some of it is plain scripting, each doing the part it is suited to.
+
+There is one more thing. The system initially was not perfect. It made mistakes, I corrected them, and the lesson is that correcting an AI once does almost nothing on its own. So the first several runs were only half automated. I checked the results after each stage, watched for where it hallucinated or slipped, and then, and this is the important bit, I had it write down a memory of that exact mistake so it would not make it again.
+
+And there is a catch in how you have to teach it. A human generalizes. Show a person one example, and they pull out the principle and apply it everywhere until it breaks. An AI is worse at that jump. It does better when you hand it the explicit list of things not to do rather than the principle behind them. Telling the AI "sugar is bad for you" is weaker than telling it "do not recommend sugar, do not recommend chocolate, do not recommend honey." So the memory I built was never a tidy set of principles. It was a concrete, growing list of specific mistakes already seen and to be avoided, which is the form an AI actually uses well.
+
+Now the obvious question. Isn't this just spam? Anyone can point an AI at a list and blast generic junk at the whole world. That is a fair thing to ask, and the honest answer is the whole point of the system.
+
+It is spam precisely when there are no rails. The AI runs unchecked, the content is generic, the facts are made up, and nobody stands behind any of it. That is the exact failure I spent the whole build trying to prevent. What this system does is the opposite. Every email is personalized and built on real, validated information about the actual person and company, not invented. There are real stakes wired into how it reasons. And the framing is not an AI off on its own, messaging the world as it pleases. It is a person handing a bounded, well-defined task to an AI that can do it reliably and faster, while faithfully carrying the intentions of the person it acts for. The line between this and spam is the same as between an agent you can trust and one you cannot.
+
+So what happened in the end? By hand, one can write no more than about 50 personalized emails a day. With the system running, the limit is no longer the operator. On a full day, it runs until it reaches the email provider's send cap, somewhere around 400 to 500 emails, each researched and personalized for its recipient. The bottleneck moves off the operator completely.
+
+And that is the real result, which is not really about email at all. The shallow work now runs on its own at machine speed, reliably enough to leave alone, which frees the operator to focus on the deep work that actually creates something.

@@ -1,0 +1,6 @@
+@use '../styles/tokens' as t;
+
+.site-footer {
+  padding-block: 1.25rem;
+  background: t.$tint;
+}

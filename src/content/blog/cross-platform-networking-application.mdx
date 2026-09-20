@@ -1,0 +1,29 @@
+---
+title: Cross Platform Networking Application
+description: >-
+  Shim code to run one encryption algorithm across Windows, macOS, Android and
+  iOS, and why the platforms were harder than the algorithm.
+summary: >-
+  A team had an encryption algorithm they wanted to test in the field, which
+  meant shim code to run it on every platform they cared about. The hard part
+  turned out to be the shim across operating systems that each do networking
+  their own way, and the fix was starting from the most constrained ecosystem.
+date: "2026-09-14"
+icon: diagram-2
+---
+
+Let me be straight. I am not a UI designer, nor a cross platform application developer. I have great respect for people who are, but I find this kind of work too tedious for me.
+
+This project needed it anyway. A team had an encryption algorithm they wanted to test in the field, but testing it meant shim code to actually run it on every platform they cared about: Windows, macOS, Android and iOS, modular enough that swapping in a different algorithm later would only take a couple of lines of code. Not my usual kind of task, but I valued what they were trying to get to, so I took it on. I can't share the details of the algorithm itself due to confidentiality, but I can share how the shim came together.
+
+Going in, I assumed the hard part would be the networking and encryption side, designing a clean interface where swapping one component would be trivial. It turned out the bigger problem wasn't the algorithm at all. It was the shim code that let it run consistently across operating systems that each do networking their own way (I count three platforms rather than four, since macOS and iOS share the same Swift code).
+
+I started with desktop, planning to move to mobile later. I tried a few open source cross platform networking libraries for daemons, TUN interfaces and routing, expecting to write the logic once and have it work everywhere. That didn't happen. These libraries abstracted a lot, but they were thin, not well maintained, and in the end nothing quite worked end to end. Every platform does networking in its own way, and forcing a single uniform model across all three wasn't realistic.
+
+So I changed strategy: start from the most constrained ecosystem, learn exactly what it exposes, then adapt the more flexible ecosystems to match. Apple is the most constrained of the three. I spent about a week in Apple's documentation getting an app to work at all, then another week fixing what that first pass got wrong. By the end I had something running on my own devices and routing traffic correctly.
+
+That took about two weeks, working alongside Opus the whole time. The task was simple in principle, but getting Swift and Rust to interoperate over FFI was the hardest part of the whole project. Most of those two weeks went into understanding what I was actually building: what owned what, in what order things had to happen, how the pieces were meant to fit. Once that was clear, Opus implemented the specification in a day or two.
+
+The real gain, though, came from something else: writing down every mistake and wrong assumption from those two weeks into a single reference file. That file, more than any one instruction, is what let Opus understand what I actually needed instead of guessing from a one-line description. The Windows build, pure Rust with a C sys crate bridging over FFI, took four days. Android, in Kotlin, took one. Handing Opus a simple instruction against that accumulated context got me a working Android proof of concept in a couple of hours.
+
+None of this was advanced in the sense of algorithms or machine learning. It was tedious, deliberate infrastructure work. But it's the foundation the team can now build on: swap encryption algorithms, test them across platforms, and keep developing the idea without redoing the shim every time.

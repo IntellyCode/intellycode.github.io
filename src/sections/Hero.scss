@@ -1,0 +1,26 @@
+.hero {
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image: linear-gradient(rgba(23, 107, 90, .07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(23, 107, 90, .07) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: radial-gradient(ellipse 70% 60% at 70% 0%, #000 20%, transparent 75%);
+  }
+}
+
+.display-name {
+  font-size: clamp(2.8rem, 6vw, 4.5rem);
+  line-height: 1.05;
+  letter-spacing: -.02em;
+}
+
+.hero-tagline {
+  font-size: clamp(1.05rem, 2vw, 1.2rem);
+  line-height: 1.7;
+}

@@ -1,0 +1,8 @@
+@use '../styles/tokens' as t;
+
+.drawer-link {
+  font-size: 1.75rem;
+  border-bottom: 1px solid t.$line;
+
+  &:hover { color: t.$green; }
+}

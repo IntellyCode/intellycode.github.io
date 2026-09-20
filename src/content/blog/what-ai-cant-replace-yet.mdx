@@ -1,0 +1,31 @@
+---
+title: What AI Can't Replace Yet
+description: >-
+  An engagement where I wrote no code at all, and what that says about where
+  human judgment still decides the outcome.
+summary: >-
+  On one engagement I wrote not a single line of C++, which raised an obvious
+  question about my own value. The answer came down to the framework: where the
+  shape of the system is already decided, AI writes good code, and where nothing
+  is settled yet, its judgment calls are often wrong.
+date: "2026-09-07"
+icon: cpu
+---
+
+A couple of months back I was travelling home from a finished client engagement.
+
+I had gone to the client to integrate their technology with a robot they had. Standard stuff so far. It just so happened that around that time Anthropic published their latest Opus model, and I'd had a chance to test it on the job.
+
+So why am I telling you this? On the trip home I realised that over that engagement I had written no code. Not a single line of C++. And all of a sudden it hit me: if AI is writing all the code, what does the company need me for? What is my value proposition?
+
+That instilled a real sense of fear. Because at first glance, this is what it looks like: AI doing the job of a programmer as well as someone with years of experience, only faster, with fewer bugs, and with more knowledge than any one person accumulates in a career. Unlike a person, limited by what they happen to know and the mistakes they happen to have made, the AI has all of that and more. So of course it writes better code.
+
+In this despair I did the only thing that made sense, which in hindsight is a little ironic: I opened a new chat and told Claude. AI starts doing our jobs, and the solution is to go complain to the AI about it.
+
+I told it the story, the observations, the whole spiral. I was expecting something like: "Yes, software development is dead, go become a plumber." I didn't get that.
+
+What I landed on instead is that the AI's success on that engagement came down to a well designed framework: ROS. Topics, nodes, messages, the shape of the system is already decided before you write a line. Within that shape, Claude wrote good C++ with very little direction from me, because the judgment calls that define correctness had already been made by the framework itself.
+
+That stopped being true on a different project, where I was designing a lightweight framework for robotics development in Rust, something in the spirit of ROS but leaner. Here nothing was decided yet. What should a node be. How should messages flow between them. What does correct even mean when you're the one setting the shape everyone else will build inside. On a task this open-ended, Claude's judgment calls were often wrong, and its code tended toward more complexity than the problem needed. I had to think about data flow, control flow, and what correctness meant before I could trust anything it wrote.
+
+Claude was still useful there. It just wasn't a tool I could point at the problem and walk away from. On open-ended problems, where the shape of the thing being built isn't settled yet, AI still lacks the judgment to act fully autonomously. That's where I think the human value rests for now. Unfortunately, or maybe fortunately, it's probably only a matter of time before AI can do that too.

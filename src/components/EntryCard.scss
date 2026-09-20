@@ -1,0 +1,15 @@
+@use '../styles/tokens' as t;
+
+.entry-row {
+  border-radius: .75rem;
+  transition: background .25s ease;
+
+  + .entry-row { box-shadow: 0 -1px 0 t.$line; }
+  .entry-icon { background: t.$pale; }
+  .arrow { transition: transform .25s; }
+  &:hover { background: t.$tint; }
+  &:hover .entry-icon { background: t.$green; color: t.$white !important; }
+  &:hover .arrow { transform: translateX(4px); }
+}
+
+.entry-icon { transition: background .25s ease, color .25s ease; }

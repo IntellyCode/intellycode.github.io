@@ -1,0 +1,40 @@
+---
+title: Real-Time Robot Tracking, Re-architected in Rust
+description: >-
+  A vision-guided robot kept losing its target. The cause was a
+  concurrency-model failure; the fix was a rearchitecture from Python to Rust.
+summary: >-
+  A vision-guided robot kept losing the person it was meant to follow whenever
+  they moved too quickly. The problem was diagnosed as a concurrency-model
+  failure, and the system was rearchitected from Python to Rust, after which the
+  robot held its target where it had previously lost it, with end-to-end latency
+  roughly halved.
+icon: bullseye
+order: 1
+---
+
+A robotics startup was building a robot for construction sites. Picture a rectangular base on mecanum wheels with a box on top, watching the world through an Intel RealSense depth camera. Its job was to track and follow a moving person in real time across the cluttered and unpredictable environment of a live site. To do that reliably, it has to detect, track, and hold the person in frame continuously.
+
+In the first implementation, above a modest walking speed, or when the target got close to the robot, the robot fell behind. The person left the frame, and tracking broke. The single worst case was tight corners, exactly the situation that a construction site is full of.
+
+In most cases, I work with teams where some edge case was never planned for, and that edge case is what is preventing the project from advancing to the next step. So I got to work figuring out what was actually going wrong.
+
+The first instinct was to fix it where it hurt. Give the robot some inertia, have it make simple predictions about where the target was heading. None of it was robust. The robot was simply too slow to react to the target's actions.
+
+This is the part of the job every engineer knows: something is too slow, and you cannot yet say why. The frustrating thing is that "slow" isn't one problem; it's a fork, and you can burn a week optimizing the wrong branch. Maybe the control loop was genuinely too slow; in that case, you make the code faster. Or, and this is the branch that turned out to matter, the control loop wasn't slow on average at all; it was *unpredictable*. There was no dedicated motor controller, so the OS itself was responsible for spinning the motors. On its own, that is usually fine *if* you can assume all the operations the robot has to run are actually happening in parallel. Here is the catch.
+
+The first system was written in Python, chosen deliberately to stand up a working architecture with minimal overhead. But Python does not run threads in parallel. It runs them concurrently. The GIL lets only one thread use the interpreter at a time, so what looked parallel to the eye was not parallel at all. The moment perception handed off to control drifted from cycle to cycle, and for a robot acting on a fixed-rate control loop, that jitter is fatal. It wasn't that any one piece was slow. It was that the timing was unpredictable.
+
+Once that was clear, the obvious move was to split the system into several separate processes. Independent processes don't share the GIL, so the control loop could finally run parallel to the perception loop. But that meant a significant refactor *and* several Python interpreters running at once, and Python is notoriously slow next to a low-level language to begin with. You'd do all that work and still be paying the Python tax on every loop.
+
+So the decision was to rewrite the system in Rust instead. The core functionality had already been tested and proven; the team had intended to move to Rust eventually anyway, and this was the moment that made it worth doing now.
+
+Rust was chosen for three reasons, each tied directly to the diagnosis:
+
+- **True parallelism and predictable timing**
+- **Memory safety without a garbage collector**
+- **A compiled, low-level language**
+
+Memory safety aside, the fair question is: why not C++ and ROS? A few reasons. ROS carries a lot of machinery that the team had no plans to use. But the deciding one was different: the Rust compiler is, for lack of a better term, "AI-safe." Rust enforces memory safety at compile time, so whatever an LLM writes either compiles into safe code or doesn't compile at all. The same can't be said of C++. An AI might still write mediocre Rust, but it can't write *unsafe* Rust, so the team spends its time fixing functionality instead of hunting a memory leak the AI introduced. For a small team moving fast with AI assistance, that was one of the real reasons Rust won.
+
+So what happened in the end? The robot became visibly more responsive, by rough estimate the latency was about half what it had been. But the result that mattered was the tracking itself: around the tight corners that used to lose the target roughly half the time, the robot now held it almost every time.

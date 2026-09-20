@@ -1,0 +1,61 @@
+---
+title: "Shear Locking: When a Coarse Mesh Gets a Bending Shaft Right by Accident"
+description: >-
+  A finite-element model of a steel shaft predicts its bend to within five
+  percent by accident: two unrelated errors happen to cancel out. Redesigning
+  the geometry shows the same element type can be 50% off.
+summary: >-
+  A finite-element model of a steel shaft, built with straight-edged elements,
+  predicts the bend of the part to within about five percent of the exact
+  answer. That agreement turns out to be an accident: two unrelated errors
+  happen to cancel each other out. Redesigning the geometry makes it obvious
+  that using straight-edged elements for a bending problem can lead to a
+  prediction that is, in the worst case, 50% off.
+icon: gear-wide-connected
+order: 4
+---
+
+Picture a robotics company building an arm meant to lift around fifty kilograms at the end of its reach. Somewhere in that arm is a steel shaft, maybe a wheel axle, maybe the pivot the whole arm turns on, and before anyone cuts metal someone has to answer a plain question: how far will this bend under load, and will it survive at all? Building a physical prototype to find out is slow and expensive. Building a finite-element model of the same shaft on a computer is neither. It lets you push and overload the part as many times as you like before a single piece of metal is machined, which is the whole appeal of the method. So let's build such a model.
+
+A finite-element model works by cutting a solid part into a mesh of small, simple pieces, called elements, solving the equations of elasticity on each piece, and stitching the results back together. The cheapest element type has straight edges and predicts how the material inside it moves in the simplest way the geometry allows: a straight line between its corners. A richer element type carries an extra point along each edge, so its edges can curve, letting it represent displacement fields that are themselves curved. For most everyday engineering questions the difference between the two barely matters, and reaching for the cheaper, straight-edged element is the sensible default. But in some cases that won't work.
+
+As the numbers below will show, a shaft bent under a sideways load and modelled with straight-edged elements can look accurate on a coarse mesh, and even more accurate on a fine mesh, yet be accurate for the wrong reason. There is also a chance it will not be accurate at all, in the worst case coming out about 50% off the actual physical result.
+
+To see this cleanly, let's look at two related models that I built and ran in FEniCSx, an open-source finite-element solver, with the mesh itself generated in Gmsh. The first is a solid steel rod, eight millimetres across, modelled as a full three-dimensional shape, clamped rigidly on one face and pushed sideways at the free end, at two lengths, 100 millimetres and 500 millimetres. In most real cases a face isn't clamped rigidly like this, so I also ran a version that clamps only part of the surface, to reflect reality more closely. But that version has no clean analytical solution, so for simplicity I'll work through the rest of this case study in the textbook, fully-clamped approximation. Extending the logic to the more realistic partially-clamped case from there would be trivial: which surface gets clamped is a boundary condition, not a change to the equations of elasticity or the solver that resolves them, so a method already checked against the exact formula in the idealized case carries the same confidence into the more realistic one. The second model is a flat bar of the same material, eight millimetres wide and two millimetres thick, bent about its thin axis, clamped and loaded the same way at the same two lengths. Both were solved twice over, once with the straight-edged elements and once with the curved ones, at two mesh densities each: a coarse mesh and a mesh refined enough that further refinement barely changes the answer. The steel is a standard structural grade, and the load in every case was sized so the peak stress stayed comfortably under yield and the tip moved only a small fraction of the part's length, an assumption that must hold true in a machine that is reusable and lasts years.
+
+I'll go through the results in two parts: first how close each version came to the exact answer, then, separately, how long each version took to run.
+
+**Round shaft, tip deflection error against the closed-form solution:**
+
+| Length | Straight-edged,<br />coarse mesh | Straight-edged,<br />fine mesh | Curved,<br />coarse mesh | Curved,<br />fine mesh |
+| --- | --- | --- | --- | --- |
+| 100 mm | +5.4 % | +0.2 % | −0.2 % | −0.1 % |
+| 500 mm | +5.9 % | +0.3 % | +0.0 % | −0.1 % |
+
+Look at the top-left numbers, the coarsest, cheapest version of the round shaft, built with the straight-edged elements. It comes out 5.4 to 5.9 percent too flexible, an error most engineers would accept without a second look, especially sitting right next to the curved-element result, which on that very same coarse mesh is already accurate to a fraction of a percent. Five percent reads as ordinary meshing noise, not a warning sign. But is that actually what's happening here?
+
+It isn't. Zoom into the coarse mesh itself and the straight-edged model isn't representing a circular shaft at all. Because its faces are flat, the round cross-section gets replaced by a polygon inscribed inside the circle, an octagon at this coarseness, and an octagon has less material sitting away from the centre than a true circle of the same diameter. That means the rod, as modelled on the coarse mesh, is significantly more flexible than it's supposed to be.
+
+Moreover, forced to represent the smoothly curving displacement field a rod actually takes on under bending using only flat-faced bricks, the straight-edged element can't bend the way the true material does, and it compensates by carrying an internal stiffness that has no physical basis, a long-known finite-element pathology called shear locking. That defect alone would make a bent shaft act stiffer than it is, in the opposite direction from the octagon's increased flexibility. These two effects partially cancel out, giving an error of only 5.4%.
+
+Some of you might ask how I know these effects actually cancel out. Take away the shape error, by giving the mesh a cross-section it can represent exactly, and the cancellation should disappear, leaving the element's own defect exposed on its own. A rectangle does exactly that. Its four sides are already flat, so it can be modelled exactly with the same elements as a rod, and that's what I ran next.
+
+**Flat bar, tip deflection error against the closed-form solution:**
+
+| Length | Straight-edged,<br />coarse mesh | Straight-edged,<br />fine mesh | Curved,<br />coarse mesh | Curved,<br />fine mesh |
+| --- | --- | --- | --- | --- |
+| 100 mm | −64.0 % | −10.7 % | −0.9 % | −0.6 % |
+| 500 mm | −63.9 % | −10.2 % | −0.2 % | −0.1 % |
+
+With the shape error gone, the same element that looked only five percent off on the round shaft is now wrong by roughly two thirds on the coarsest bar mesh, and still wrong by about ten percent once the mesh is refined to four elements through the thickness. You can of course refine the mesh further. But is that worth it? The same coarse mesh, using curved elements instead, lands under 1% off the exact solution. And more elements also means longer compute time, which I've documented in the table below.
+
+| | Straight-edged,<br />fine mesh | Curved,<br />coarse mesh |
+| --- | --- | --- |
+| Flat bar, 100 mm | 0.2 s | 0.1 s |
+| Flat bar, 500 mm | 3.2 s | 0.5 s |
+| Round shaft, 100 mm | 2.0 s | 0.6 s |
+| Round shaft, 500 mm | 20 s | 2.8 s |
+
+In every case the coarser mesh built from curved elements finished faster than the finer mesh built from straight-edged ones, by a factor of two to seven, and it was also the more accurate of the two. There is no real trade-off being offered here between speed and correctness. The curved elements are objectively better.
+
+None of this makes the straight-edged element a bad tool in general. For problems dominated by stretching or compression rather than bending, it's often the right, cheap choice. But bending is exactly the load case a shaft, an axle, or an arm most often sees. It just so happens that for a perfectly cylindrical rod the answer looks correct for the wrong reason, so one might not give it a second thought. Building the model with the curved element from the start costs a little more per element, but in every case tested here it needed fewer elements, ran faster, and landed closer to the exact answer than the cheaper alternative ever managed.

@@ -1,0 +1,8 @@
+@use '../styles/tokens' as t;
+
+.work-item {
+  border-left: 2px solid t.$line;
+  transition: border-color .25s ease;
+
+  &:hover { border-left-color: t.$green; }
+}
