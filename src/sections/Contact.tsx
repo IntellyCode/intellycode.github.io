@@ -2,7 +2,7 @@ import { site } from '../site'
 
 export default function Contact() {
   return (
-    <section id="contact" className="py-5 section-pale">
+    <section id="contact" className="py-5 section-white">
       <div className="container py-md-5 reveal">
         <h2 className="section-title mb-3">Contact</h2>
         <p className="hero-tagline text-body-secondary mb-4" style={{ maxWidth: '34em' }}>

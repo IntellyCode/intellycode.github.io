@@ -8,12 +8,8 @@
 .section-white {
   background: t.$white;
   border-top: 1px solid t.$line;
-  border-bottom: 1px solid t.$line;
 
-  &:last-child {
-    flex-grow: 1;
-    border-bottom: 0;
-  }
+  &:last-child { flex-grow: 1; }
 }
 
 .section-pale {

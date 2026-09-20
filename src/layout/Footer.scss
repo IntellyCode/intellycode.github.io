@@ -2,5 +2,6 @@
 
 .site-footer {
   padding-block: 1.25rem;
-  background: t.$tint;
+  background: t.$paper;
+  padding-bottom: calc(1.25rem + env(safe-area-inset-bottom));
 }

@@ -18,7 +18,7 @@ export default function Testimonials() {
   }
 
   return (
-    <Section id="testimonials" tone="pale" title="What clients say" subtitle="From the reference letters of people I worked with directly.">
+    <Section id="testimonials" tone="white" title="What clients say" subtitle="From the reference letters of people I worked with directly.">
       <div className="swipe-row" ref={row} onScroll={onScroll}>
         {testimonials.map((item) => (
           <figure key={item.name} className="reveal quote-card card p-4 mb-0">
