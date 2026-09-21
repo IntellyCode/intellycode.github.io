@@ -12,27 +12,29 @@ date: "2026-09-20"
 icon: diagram-3
 ---
 
-Recently I've been working on networking applications in Rust. Part of that meant implementing a user space IP stack, meaning the TCP/IP logic runs in an application process instead of the OS kernel, so I could control and modify it directly. For the numbers below, assume a round trip time of 200ms.
+Recently I've been working on networking applications in Rust. Part of that meant implementing a user space IP stack, meaning the TCP/IP logic runs in an application process instead of the OS kernel, so I could control and modify it directly.
 
-I had a strong internet connection, but throughput on the link was capped at around 2.62 Mbps. Throughput on a TCP connection is not just a property of the link. It's a function of two things: how much data you're allowed to have in flight before waiting for an acknowledgement, and how long that acknowledgement takes to come back.
+Throughput on a TCP connection is not just a property of the link. It's a function of two things: how much data you're allowed to have in flight before waiting for an acknowledgement, and how long that acknowledgement takes to come back.
 
 $$
 \text{throughput} = \frac{\text{window size}}{\text{round trip time}}
 $$
 
-The library I was using for the user space stack hard coded the window scaling factor to 0. With window scaling off, TCP's window size field is limited to 16 bits, capping the window at 65,535 bytes regardless of how fast or short the round trip is. That cap is the entire explanation for my throughput ceiling.
-
-$$
-\frac{65{,}535 \text{ bytes}}{0.2 \text{ s}} \approx 2.62 \text{ Mbps}
-$$
-
-Window scaling is a TCP option that multiplies the window size field by $2^s$, where $s$ is the scale factor, up to a maximum of 14. That raises the effective window from 65,535 bytes to just over 1 gigabyte.
+TCP's window size field is 16 bits on its own, capping the window at 65,535 bytes. Window scaling is a TCP option that multiplies that field by $2^s$, where $s$ is the scale factor, up to a maximum of 14.
 
 $$
 \text{effective window} = \text{window field} \times 2^{s}
 $$
 
-With window scaling implemented properly, the maximum throughput per TCP connection is no longer capped by a fixed 65KB window. It's defined by the same formula, but now with $s$ able to go up to 14, and the round trip time as the only remaining limit. At the same 200ms round trip time, the maximum throughput is now:
+I had a strong internet connection, but throughput on the link was capped at around 2.62 Mbps.
+
+The library I was using for the user space stack hard coded the window scaling factor to 0. With scaling off, the window stays at 65,535 bytes regardless of how fast or short the round trip is. My round trip time was about 200ms, and that cap is the entire explanation for my throughput ceiling.
+
+$$
+\frac{65{,}535 \text{ bytes}}{0.2 \text{ s}} \approx 2.62 \text{ Mbps}
+$$
+
+With window scaling implemented properly, the maximum throughput per TCP connection is no longer capped by a fixed 65KB window. At $s = 14$, the effective window rises to just over 1 gigabyte, and at the same 200ms round trip time, the maximum throughput becomes:
 
 $$
 \frac{65{,}535 \text{ bytes} \times 2^{14}}{0.2 \text{ s}} \approx 43 \text{ Gbps}
