@@ -29,7 +29,7 @@ $$
 Window scaling is a TCP option that multiplies the window size field by $2^s$, where $s$ is the scale factor, up to a maximum of 14. That raises the effective window from 65,535 bytes to just over 1 gigabyte.
 
 $$
-\text{effective window} = \text{window field} \times 2^{s}, \quad 0 \le s \le 14
+\text{effective window} = \text{window field} \times 2^{s}
 $$
 
 With window scaling implemented properly, the maximum throughput per TCP connection is no longer capped by a fixed 65KB window. It's defined by the same formula, but now with $s$ able to go up to 14, and the round trip time as the only remaining limit. At the same 200ms round trip time, the maximum throughput is now:
