@@ -19,7 +19,9 @@ To simulate this deformation, we need to know what a simulation does inside each
 
 For bending, brick (hexahedral) elements are standard engineering practice. Inside such an element the displacement is described by either a linear or a quadratic function, which gives two classes of element. To write this function down, take one brick with its centre at $(X,Y,Z)$ and measure the coordinates from that centre: $\tilde x=x-X$, $\tilde y=y-Y$, $\tilde z=z-Z$. In the linear brick every displacement component is a sum of eight terms, in which each coordinate appears at most to the first power:
 
-$$u_x=\sum_{i,j,k\in\{0,1\}}\alpha_{ijk}\,\tilde x^{i}\tilde y^{j}\tilde z^{k},$$
+$$
+u_x=\sum_{i,j,k\in\{0,1\}}\alpha_{ijk}\,\tilde x^{i}\tilde y^{j}\tilde z^{k},
+$$
 
 and the same for $u_y$ with coefficients $\beta_{ijk}$ and $u_z$ with $\gamma_{ijk}$. Eight coefficients need eight known values, and the eight corners of the brick supply them, so the corners are its nodes. In the quadratic brick each coordinate may appear up to the second power, which gives 27 coefficients. A brick has only eight corners, so this element carries extra nodes: one at the midpoint of each of the 12 edges, one at the centre of each of the 6 faces, and one at the centre of the brick, 27 in total.
 
@@ -36,7 +38,9 @@ Here $u_x$ and $u_z$ contain only products of different coordinates, but $u_y$ c
 
 The linear brick cannot build these squares. Along one edge it has two nodes, at $\tilde x=\pm a$, and at both of them $\tilde x^2=a^2$. The element cannot tell the square from a constant. Now let's see what this does to the strain. The shear strain is
 
-$$u_{xy}=\frac12\left(\frac{\partial u_x}{\partial y}+\frac{\partial u_y}{\partial x}\right),$$
+$$
+u_{xy}=\frac12\left(\frac{\partial u_x}{\partial y}+\frac{\partial u_y}{\partial x}\right),
+$$
 
 and in pure bending it must be zero everywhere. Differentiating the element's own sums,
 
@@ -53,7 +57,9 @@ $$
 
 No shear means $u_{xy}=0$ at every point of the element, and a term proportional to $\tilde x$ can vanish for all $\tilde x$ only if its coefficient is zero. This requires $\alpha_{110}=0$. But $\alpha_{110}$ also appears in the strain along the axis, where it multiplies $\tilde y$:
 
-$$u_{xx}=\frac{\partial u_x}{\partial x}=\sum_{j,k}\alpha_{1jk}\,\tilde y^{j}\tilde z^{k}.$$
+$$
+u_{xx}=\frac{\partial u_x}{\partial x}=\sum_{j,k}\alpha_{1jk}\,\tilde y^{j}\tilde z^{k}.
+$$
 
 Pure bending needs $u_{xx}=y/R=(Y+\tilde y)/R$, which requires $\alpha_{110}=1/R$. The two conditions contradict each other: $\alpha_{110}=1/R$ for the right bending strain, $\alpha_{110}=0$ for no shear. This holds whatever the nodal values are. The exact solution does not belong to the set of functions a linear brick can build. In the exact field the $x^2$ term in $u_y$ cancels the shear that the $xy$ term in $u_x$ creates, and the linear element has no such term. The element therefore reports a shear that does not exist, that fake shear stores energy, and the element comes out too stiff. That is shear locking.
 
