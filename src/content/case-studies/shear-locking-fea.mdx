@@ -3,14 +3,14 @@ title: "Shear Locking: When a Coarse Mesh Gets a Bending Shaft Right by Accident
 description: >-
   A finite-element model of a steel shaft predicts its bend to within five
   percent by accident: two unrelated errors happen to cancel out. Redesigning
-  the geometry shows the same element type can be 50% off.
+  the geometry shows the same element type can be 60% off.
 summary: >-
   A finite-element model of a steel shaft, built with straight-edged elements,
   predicts the bend of the part to within about five percent of the exact
   answer. That agreement turns out to be an accident: two unrelated errors
   happen to cancel each other out. Redesigning the geometry makes it obvious
   that using straight-edged elements for a bending problem can lead to a
-  prediction that is, in the worst case, 50% off.
+  prediction that is, in the worst case, 60% off.
 icon: gear-wide-connected
 order: 4
 ---
@@ -19,7 +19,7 @@ Picture a robotics company building an arm meant to lift around fifty kilograms 
 
 A finite-element model works by cutting a solid part into a mesh of small, simple pieces, called elements, solving the equations of elasticity on each piece, and stitching the results back together. The cheapest element type has straight edges and predicts how the material inside it moves in the simplest way the geometry allows: a straight line between its corners. A richer element type carries an extra point along each edge, so its edges can curve, letting it represent displacement fields that are themselves curved. For most everyday engineering questions the difference between the two barely matters, and reaching for the cheaper, straight-edged element is the sensible default. But in some cases that won't work.
 
-As the numbers below will show, a shaft bent under a sideways load and modelled with straight-edged elements can look accurate on a coarse mesh, and even more accurate on a fine mesh, yet be accurate for the wrong reason. There is also a chance it will not be accurate at all, in the worst case coming out about 50% off the actual physical result.
+As the numbers below will show, a shaft bent under a sideways load and modelled with straight-edged elements can look accurate on a coarse mesh, and even more accurate on a fine mesh, yet be accurate for the wrong reason. There is also a chance it will not be accurate at all, in the worst case coming out about 60% off the actual physical result.
 
 To see this cleanly, let's look at two related models that I built and ran in FEniCSx, an open-source finite-element solver, with the mesh itself generated in Gmsh. The first is a solid steel rod, eight millimetres across, modelled as a full three-dimensional shape, clamped rigidly on one face and pushed sideways at the free end, at two lengths, 100 millimetres and 500 millimetres. In most real cases a face isn't clamped rigidly like this, so I also ran a version that clamps only part of the surface, to reflect reality more closely. But that version has no clean analytical solution, so for simplicity I'll work through the rest of this case study in the textbook, fully-clamped approximation. Extending the logic to the more realistic partially-clamped case from there would be trivial: which surface gets clamped is a boundary condition, not a change to the equations of elasticity or the solver that resolves them, so a method already checked against the exact formula in the idealized case carries the same confidence into the more realistic one. The second model is a flat bar of the same material, eight millimetres wide and two millimetres thick, bent about its thin axis, clamped and loaded the same way at the same two lengths. Both were solved twice over, once with the straight-edged elements and once with the curved ones, at two mesh densities each: a coarse mesh and a mesh refined enough that further refinement barely changes the answer. The steel is a standard structural grade, and the load in every case was sized so the peak stress stayed comfortably under yield and the tip moved only a small fraction of the part's length, an assumption that must hold true in a machine that is reusable and lasts years.
 
