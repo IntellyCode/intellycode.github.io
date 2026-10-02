@@ -13,19 +13,20 @@ date: "2026-10-02"
 icon: rulers
 ---
 
-In my [case study on shear locking](/case-studies/shear-locking-fea), a finite element (FEM) simulation of a bent flat steel bar came out about 60% too stiff with linear bricks on a coarse mesh, and still about 10% off after refining it to four elements through the thickness. Shear locking is an effect in simulations where the modelled rod resists bending more than a real rod does. The case study showed it experimentally, and here I want to show where it comes from mathematically.
+In my [case study on shear locking](/case-studies/shear-locking-fea), a finite element (FEM) simulation of a bent flat steel bar came out about 60% too stiff with linear bricks on a coarse mesh, and still about 10% off after refining it. Shear locking is an effect in simulations where the modelled rod resists bending more than a real rod does. The case study showed it experimentally, and here I want to show where it comes from mathematically.
 
-Imagine taking a cylindrical rod and bending it into an arc of a circle by applying a moment, a pure turning effect with no net force. There is no shear force, no twist and no stretching of the axis. That is pure bending. In practice it rarely appears on its own, and anything worth simulating is more complicated. But any slender part that bends contains this deformation at its core. If an element cannot represent pure bending, it cannot represent the bending part of a more complicated problem either, so the defect appears there too. How big it is will differ from problem to problem.
+To simulate this deformation, we need to know what a simulation does inside each small piece of the rod. In the finite element method (FEM), the body is cut into small elements. Each element has a set of points called nodes, and the unknown displacement inside the element is replaced by a simple function fixed by its values at those nodes. The solver finds the nodal values.
 
-FEM cuts the body into small elements and replaces the unknown displacement inside each one by a simple function fixed by its values at the nodes. The solver finds those nodal values. For bending, brick (hexahedral) elements are standard engineering practice, and there are two common classes, linear and quadratic. Measure the coordinates from the centre of the element, $\tilde x=x-X$, $\tilde y=y-Y$, $\tilde z=z-Z$. In the linear brick every displacement component is a sum of eight terms,
+For bending, brick (hexahedral) elements are standard engineering practice. Inside such an element the displacement is described by either a linear or a quadratic function, which gives two classes of element. To write this function down, take one brick with its centre at $(X,Y,Z)$ and measure the coordinates from that centre: $\tilde x=x-X$, $\tilde y=y-Y$, $\tilde z=z-Z$. In the linear brick every displacement component is a sum of eight terms, in which each coordinate appears at most to the first power:
 
-$$
-u_x=\sum_{i,j,k\in\{0,1\}}\alpha_{ijk}\,\tilde x^{i}\tilde y^{j}\tilde z^{k},
-$$
+$$u_x=\sum_{i,j,k\in\{0,1\}}\alpha_{ijk}\,\tilde x^{i}\tilde y^{j}\tilde z^{k},$$
 
-and the same for $u_y$ with coefficients $\beta_{ijk}$ and $u_z$ with $\gamma_{ijk}$. Eight coefficients need eight known values, so the element has 8 nodes, the corners, and the nodal values fix the coefficients one to one. In the quadratic brick the powers run over $\{0,1,2\}$, which gives 27 coefficients and 27 nodes. The question I am asking is whether the exact solution of the bending problem can be written in the form an element can build. If it can, the solver is able to find it. If it cannot, no choice of nodal values will ever reproduce it.
+and the same for $u_y$ with coefficients $\beta_{ijk}$ and $u_z$ with $\gamma_{ijk}$. Eight coefficients need eight known values, and the eight corners of the brick supply them, so the corners are its nodes. In the quadratic brick each coordinate may appear up to the second power, which gives 27 coefficients. A brick has only eight corners, so this element carries extra nodes: one at the midpoint of each of the 12 edges, one at the centre of each of the 6 faces, and one at the centre of the brick, 27 in total.
 
-So first, the exact solution. In §17 of Landau and Lifshitz, Theory of Elasticity (Chapter II, Bending of rods), a rod bent with radius of curvature $R$ and made of a material with Poisson's ratio $\sigma$ has the displacement field
+So inside each element the displacement is a polynomial, and the element approximates the true solution locally by a polynomial. The exact solution of the bending problem is a closed-form function of the coordinates. The question is whether this function is itself a polynomial of the kind the element contains. If it is, the element can match it exactly and the solver is able to find it. If it is not, the element can only approximate it, and no choice of nodal values will reproduce it.
+
+Let's begin with the exact solution. In §17 of Landau and Lifshitz, Theory of
+Elasticity (Chapter II, Bending of rods), a rod bent with radius of curvature $R$ and made of a material with Poisson's ratio $\sigma$ has the displacement field
 
 $$
 u_x=\frac{xy}{R},\qquad u_y=-\frac{x^2+\sigma(y^2-z^2)}{2R},\qquad u_z=-\frac{\sigma yz}{R}.
@@ -35,9 +36,7 @@ Here $u_x$ and $u_z$ contain only products of different coordinates, but $u_y$ c
 
 The linear brick cannot build these squares. Along one edge it has two nodes, at $\tilde x=\pm a$, and at both of them $\tilde x^2=a^2$. The element cannot tell the square from a constant. Now let's see what this does to the strain. The shear strain is
 
-$$
-u_{xy}=\frac12\left(\frac{\partial u_x}{\partial y}+\frac{\partial u_y}{\partial x}\right),
-$$
+$$u_{xy}=\frac12\left(\frac{\partial u_x}{\partial y}+\frac{\partial u_y}{\partial x}\right),$$
 
 and in pure bending it must be zero everywhere. Differentiating the element's own sums,
 
@@ -46,22 +45,20 @@ $$
 \frac{\partial u_y}{\partial x}=\sum_{j,k}\beta_{1jk}\,\tilde y^{j}\tilde z^{k}.
 $$
 
-In the second sum $\tilde x$ has disappeared, because $u_y$ is only linear in $\tilde x$. So only $u_x$ can produce an $\tilde x$ in the shear:
+Differentiating with respect to $x$ removes $\tilde x$ from any term that contains it only to the first power. Since $u_y$ is at most linear in $\tilde x$, the derivative $\partial u_y/\partial x$ contains no $\tilde x$ at all. So the shear can depend on $\tilde x$ only through $\partial u_x/\partial y$, where the term $\alpha_{110}\tilde x\tilde y$ becomes $\alpha_{110}\tilde x$:
 
 $$
 2u_{xy}=\alpha_{110}\,\tilde x+\alpha_{111}\,\tilde x\tilde z+\ (\text{terms in }\tilde y,\tilde z\text{ only}).
 $$
 
-No shear means $u_{xy}=0$ for all $x$ in the element, which requires $\alpha_{110}=0$. But $\alpha_{110}$ is the coefficient of $\tilde x\tilde y$ in $u_{xx}$:
+No shear means $u_{xy}=0$ at every point of the element, and a term proportional to $\tilde x$ can vanish for all $\tilde x$ only if its coefficient is zero. This requires $\alpha_{110}=0$. But $\alpha_{110}$ also appears in the strain along the axis, where it multiplies $\tilde y$:
 
-$$
-u_{xx}=\frac{\partial u_x}{\partial x}=\sum_{j,k}\alpha_{1jk}\,\tilde y^{j}\tilde z^{k} .
-$$
+$$u_{xx}=\frac{\partial u_x}{\partial x}=\sum_{j,k}\alpha_{1jk}\,\tilde y^{j}\tilde z^{k}.$$
 
 Pure bending needs $u_{xx}=y/R=(Y+\tilde y)/R$, which requires $\alpha_{110}=1/R$. The two conditions contradict each other: $\alpha_{110}=1/R$ for the right bending strain, $\alpha_{110}=0$ for no shear. This holds whatever the nodal values are. The exact solution does not belong to the set of functions a linear brick can build. In the exact field the $x^2$ term in $u_y$ cancels the shear that the $xy$ term in $u_x$ creates, and the linear element has no such term. The element therefore reports a shear that does not exist, that fake shear stores energy, and the element comes out too stiff. That is shear locking.
 
-In the quadratic brick every term in the three components has each coordinate at power at most two, so the whole field is in the family, $x^2$, $y^2$ and $z^2$ included. The solution belongs to the set of functions a quadratic brick can build.
+The quadratic brick has no such problem. Along one edge it has three nodes, at $\tilde x=-a,\,0,\,a$, and the square takes the values $a^2,\,0,\,a^2$, so the element can tell it from a constant. In all three directions each coordinate may appear up to the second power, and that is all the exact field needs: $u_x$ and $u_z$ contain only first powers, and $u_y$ contains the squares $x^2$, $y^2$ and $z^2$, nothing higher. So the exact solution is a polynomial of the kind the quadratic brick contains, and the element can match it exactly. In particular the $x^2$ term in $u_y$ is present, and it cancels the shear created by the $xy$ term in $u_x$.
 
-What remains is to be sure that the solver actually finds it. A real elastic body settles into the state of minimum total potential energy, which is the elastic strain energy minus the work done by the external loads. FEM minimizes the same quantity, but only over the functions the mesh can build. If the exact solution is among them, it is also the minimum among them, so the solver finds it. This holds for a linear elastic material with proper boundary conditions and nothing too exotic in the loads.
+What remains is to show that the solver actually returns this solution when quadratic elements are used. A real elastic body settles into the state of minimum total potential energy, the elastic strain energy minus the work done by the external loads, and the exact solution is that state. FEM minimizes the same quantity, but only among the polynomials the elements contain. We have shown that the exact solution is one of them, so nothing in that set has lower energy and the solver returns it. This holds for a linear elastic material with proper boundary conditions and nothing too exotic in the loads.
 
 So the linear brick does not merely give a less accurate answer in bending. Bending is a state it cannot represent, so a stiffness error is built in, and refining the mesh only shrinks it, as the bar showed, from about 60% on the coarse mesh to about 10% on the fine one. The quadratic brick contains that state, which is why it is the better element for this kind of problem. And as the case study showed, a coarse mesh of quadratic bricks landed within 1% of the exact answer and ran two to seven times faster than the refined linear mesh.
