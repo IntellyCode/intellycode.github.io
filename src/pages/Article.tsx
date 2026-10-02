@@ -17,6 +17,7 @@ export default function Article({ entry, series }: Props) {
     <article className="section-white py-5">
       <Seo
         title={`${meta.title} — ${site.name}`}
+        shareTitle={meta.title}
         description={meta.description}
         schema={{
           '@context': 'https://schema.org',

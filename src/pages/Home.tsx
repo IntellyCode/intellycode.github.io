@@ -11,6 +11,7 @@ export default function Home() {
     <>
       <Seo
         title={`${site.name} — ${site.role}`}
+        shareTitle={`${site.name} — ${site.role}`}
         description={site.description}
         schema={{
           '@context': 'https://schema.org',

@@ -6,7 +6,7 @@ import { site } from '../site'
 export default function BlogIndex() {
   return (
     <section className="section-white py-5">
-      <Seo title={`Blog — ${site.name}`} description="Notes on engineering, physics, and software." />
+      <Seo title={`Blog — ${site.name}`} shareTitle={`Blog — ${site.name}`} description="Notes on engineering, physics, and software." />
       <div className="container">
         <div className="pt-md-4 mb-5" style={{ maxWidth: 640 }}>
           <h1 className="section-title mb-2">Notes</h1>
