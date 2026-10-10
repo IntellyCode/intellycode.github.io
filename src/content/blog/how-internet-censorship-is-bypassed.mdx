@@ -1,0 +1,40 @@
+---
+title: How Internet Censorship Is Bypassed
+description: >-
+  An ISP blocks a site by reading the IP address and the SNI at the start of a
+  connection. A VPN hides both, a VPN handshake has a recognisable shape, and a
+  Trojan-class proxy replaces it with an ordinary TLS handshake.
+summary: >-
+  How censorship works at the protocol level: what an ISP can read in your
+  traffic, why a VPN defeats it, why a VPN can itself be fingerprinted and
+  blocked, and how the proxy protocols used in China, Russia and Iran hide
+  inside ordinary HTTPS.
+date: "2026-10-10"
+icon: shield-lock
+---
+
+Internet censorship. You all heard about it. Not that uncommon nowadays. Here, I would like to discuss how the internet can be censored, what internet users can do to browse freely, and what happens if WireGuard (or any other traditional VPN) breaks. I will focus on the protocols and the data they put on the wire.
+
+Let's say you woke up one day and wanted to go on CNN to read what is happening around the world. But your ISP (internet service provider) does not want you accessing CNN, for example, to promote its own Very Real News service. It does that by looking at your internet traffic.
+
+Internet traffic is structured in layers. At the top sits the application, here a browser, speaking HTTP (Hypertext Transfer Protocol): a request telling the server which article I want, and the server's reply carrying that article. This is the application layer. The request is passed down to the transport layer, which uses TCP (Transmission Control Protocol) to wrap it in the information needed to deliver it reliably. Finally everything is passed to the internet layer, where the destination IP (Internet Protocol) address is appended.
+
+In between the application and transport layers sits one more layer, encryption. To make sure the data we send is readable only by us and the server, it is encrypted with TLS (Transport Layer Security). Before any data flows, the two sides perform a handshake in which they agree on a shared key. The first message of that handshake, the ClientHello, is sent before any key exists, so anyone on the path can read it. It carries the SNI (server name indication), the name of the website I want, which a server hosting several websites needs in order to answer with the right one. Today the SNI is sent as plaintext in most cases.
+
+Based on all of this, the ISP has 2 options to block your internet traffic to CNN. It can read the ClientHello, match the SNI against the CNN name on its blocklist, and block any outgoing data to CNN. Or it can block the CNN IP address directly.
+
+To bypass such a restriction you can get yourself a VPN (virtual private network) and connect to CNN via an intermediary server. The data you want to send to and receive from CNN, TLS handshake and SNI included, is wrapped in an encrypted packet addressed to this VPN server. The ISP sees the VPN's IP address, while CNN's address and the SNI stay inside the encrypted packet. Given that the VPN's IP is not on the blocklist, the traffic goes through, and you can now reach CNN via this VPN tunnel.
+
+The ISP might not like that, so it might consider investing in technology to block VPNs. The ISP can inspect your packets to see if you are using a VPN. It can't decrypt the data you are sending, but it can use deep packet inspection, which pretty much records statistical patterns of the data you send. Such a technique is reliable because of a fundamental property of a VPN tunnel: authentication.
+
+When you first connect to the VPN server, you do a handshake with it and authenticate. In traditional VPN protocols like WireGuard or OpenVPN, this exchange has a fixed framing and order of messages, so it can be fingerprinted. The ISP sees a handshake that matches a VPN and blocks the connection to that IP.
+
+So, all of a sudden, your VPN stops working. Long gone are the dreams of reading CNN. Or are they?
+
+Here is where we get into proxy protocols. Some proxy protocols do the same job as a VPN, with one key difference. Their handshake is an ordinary-looking TLS handshake, like the one your browser performs when you browse the internet, and has no VPN-specific structure.
+
+The best examples of that are Trojan (not the virus!!), its Go reimplementation trojan-go, and VLESS over TLS. Here is their main operating principle. Any data you want to send to CNN goes through your own proxy server. But your proxy server speaks HTTPS (Hypertext Transfer Protocol Secure). It has an actual domain and serves an actual website. You, the user, have a secret password that you send inside the established TLS connection. Anyone who sends a wrong one, or none, gets the decoy website, and you get CNN. The ISP sees an HTTPS connection to a small, harmless website, and the SNI it reads is your cat blog's domain.
+
+These tools are not bulletproof. In recent years, ways to detect them have appeared, such as TLS-in-TLS detection, statistical analysis, and active probing of misconfigured servers. Acting on them means accepting false positives, and a false positive blocks ordinary traffic, which can break government portals, banking services, local messaging apps, etc. That is the reason these tools remain operational nowadays in China, Russia and Iran.
+
+So to summarise. An ISP can prevent you from accessing certain websites by reading the IP address and the SNI at the start of a connection. You can bypass that restriction with a VPN, which hides both inside an encrypted tunnel. If the ISP is particularly adamant, it can block the VPN itself, because VPN handshakes have a recognisable shape. A Trojan-class proxy protocol replaces that handshake with an ordinary-looking TLS handshake, and variants of it are in use in China, Russia and Iran today with varying levels of success.
