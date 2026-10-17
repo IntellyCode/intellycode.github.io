@@ -1,0 +1,37 @@
+---
+title: Removing Copies By Making Code Unsafe
+description: >-
+  A camera node crashed on its first frame. Four copies of a 2.64 MiB frame
+  overflowed an 8 MiB stack, and the fix was an unsafe block that let the
+  camera write straight into shared memory.
+summary: >-
+  Why a camera node overflowed the stack on its first frame, what unsafe Rust
+  actually is, and how an unsafe block removed every copy by letting the camera
+  write its frame directly into shared memory.
+date: "2026-10-17"
+icon: cpu-fill
+---
+
+For those of you that don't know me that well, I really like Rust. It is one of my favourite programming languages. The compiler is amazing. Its borrow checker guarantees that my code is memory safe without sacrificing performance, and it is as fast as C++ without the many ways C++ gives you to shoot yourself in the foot.
+
+Recently I was working on a computer vision system for a robot in Rust. The team had a custom robotics framework, something not unlike ROS, but purely in Rust with zero copy IPC (inter-process communication). The issue was that the camera node producing frames would crash after it captured the first frame due to a stack overflow.
+
+Even though the team wanted zero copies there were several being created in the process of feeding the frames into iceoryx2, the IPC crate. The reason was the following. To maintain simplicity for the developers the team had a node abstraction above what iceoryx2 offers. The node owns a publisher, an object to publish data into shared memory. Initially a camera frame was read into an array on the stack. This array was passed by value into the publish function. Hence another copy. This second frame was then copied into a new data type and only then was this copied into the shared buffer of the publisher.
+
+A 1280 × 720 RGB frame takes 2.64 MiB and the stack limit on a Mac is 8 MiB, so four copies overflow it. Passing a frame by value to iceoryx2 needed at least three of them on the stack, which leaves almost no room, and the overflow came when the frame was passed to iceoryx2. One could potentially use a matrix in the heap and hence avoid having the frames on the stack, but that would only solve half the problem: the copies remain.
+
+The solution was to have the camera write directly into the shared buffer. And here is where an explanation of unsafe code, what it is, what it enables a developer writing Rust code, and why it was necessary is warranted.
+
+Let's begin with a few fundamentals of Rust. Rust has references and pointers (of mutable and immutable variety, but that is of secondary importance here). A reference is the memory address of something (an object) on the stack or the heap. The borrow checker enforces its rules on every reference, and that is what guarantees memory safety. Moreover, a reference is never null and the object it references is always valid.
+
+A pointer is an unsafe reference. It still is a memory address to an object but this time with no guarantees from the compiler. It can only be dereferenced inside an 'unsafe' block, a part of the code where the compiler does not check what the pointer points to. The developer must.
+
+Inside this unsafe block we could then do things that are not usually allowed. For example temporarily have a half initialised object or create a buffer that will store something but which when created does not have anything.
+
+Iceoryx2 allows us to loan a part of the shared memory to write something into it. The reason Rust refuses to compile that is that if I create that buffer but forget to populate it with data I have a part of memory with data that I don't control. If I then try to read that data I might get undefined behaviour. Example: a Boolean in Rust is saved in memory as either a 0 or a 1 (false or true). But what happens if I say that a chunk of memory is a Boolean while it actually holds byte 2? The compiler can't guarantee that won't happen so it belongs in an unsafe block.
+
+But an unsafe block does not mean the code is wrong. In our case iceoryx2 gave us a buffer and we then gave this buffer to a closure (a function that runs once the buffer exists). As soon as the buffer was created, the closure wrote the camera image into it. The closure receives the address of the buffer in shared memory, so the camera writes the frame straight to its final destination. The frame is never placed in an array on the stack, never passed by value and never wrapped in a second data type, so it exists exactly once, in shared memory.
+
+Side note. For this unsafe block to work, the data that we pass to the publisher must also be zeroable, i.e. an object of the chosen type must make sense even if every byte is 0. That guarantees that if I want to save a depth frame together with an RGB frame in shared memory but in the closure I accidentally forget to pass a depth frame and only pass the RGB frame, the object living in shared memory is valid even if wrong.
+
+So why am I telling you all this? One usually does not need unsafe code in Rust. Normal Rust objects usually suffice. But in the specific case where one needs to manually work with buffers the compiler can't guarantee that what I do is memory safe, hence I wrap it in an unsafe block, marking that spot as particularly important to guarantee the safety and security of my application. Unsafe code is actually pretty safe if you know what you are doing.
