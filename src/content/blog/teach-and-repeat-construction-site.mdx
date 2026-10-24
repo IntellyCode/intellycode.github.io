@@ -1,0 +1,52 @@
+---
+title: "Teach and Repeat on a Construction Site: Cameras or Lidar?"
+description: >-
+  Teach and repeat navigation for a construction-site robot: 360° camera place
+  recognition with MegaLoc and heading recovery from panoramas, against
+  lidar-inertial odometry, its degeneracy in featureless terrain, and stairs.
+summary: >-
+  A construction-site robot learns a route once from a human guide and then
+  drives it alone, through ramps, stairs, changing light and bare concrete
+  rooms. The post compares two ways to build this teach and repeat system, a
+  360° camera stack and a lidar stack, against the published research, and
+  lands on where each one stands today.
+date: "2026-10-24"
+---
+
+Picture a robot on a construction site. It carries material from point A to point B and back. On its way it climbs a ramp, leaves a dark room for bright sunlight, passes workers, and avoids a bag of cement that someone left in the middle of the corridor. What technology drives such a robot?
+
+Let's think about how we humans navigate. Whenever you get a new job and enter the company's office space, someone will most probably show you around. So let's assume a construction worker shows the robot where point A is and where point B is.
+
+As you followed your guide you took a mental note of where everything is: where the kitchen is, where your office is, how the corridors look, etc. So let's assume the robot can do the same. It will take snapshots of every place it has visited, called keyframes, to know if it was here earlier or not, each stored together with the robot's position and orientation relative to the previous one.
+
+As a person, when you want to go to the kitchen from your office, you create sort of a mental map of how to get there, often subconsciously. You simply know: go to this corridor, take a left, then a right, go down the stairs and the kitchen will be on your left. Initially you look around to try to remember landmarks that your guide showed you. Over time it simply becomes muscle memory. Miraculously, you are able to reach the kitchen every time without having hit yourself on a wall.
+
+We want to now apply this way of thinking to a robot and that brings us to autonomous navigation of robotic systems. Here I would like to share two ideas for how a construction site robot could autonomously follow a known path using either a camera-based system or a lidar-based one (lidar, short for light detection and ranging, measures distances with laser pulses).
+
+The core principle of this task is teach and repeat (T&R): a human guides the robot along the route once (teach), and the robot then drives the same route by itself (repeat). Furgale and Barfoot formulated it for rovers in their paper "Visual teach and repeat for long-range rover autonomy" (Journal of Field Robotics, 2010), where a stereo-camera system covered more than 32 km, 99.6% of it autonomously. VT&R3 from the University of Toronto is its open implementation, and it allows one to replicate teach and repeat on a robot using lidar, radar, radar-lidar or stereo vision. 
+
+Let's begin with the camera system. It would be nice if the robot could see everything around it, just as we do by turning our necks. A 360° camera system, for example four fisheye cameras around the body whose views are merged into one panoramic image, would satisfy that requirement. The main benefit is that on the return trip the rear cameras of the outbound trip become the front cameras, and the robot sees the same places from the same spots, just facing the other way, so the return trip looks like the outbound trip, only rotated. 
+
+Using this panoramic image we want to localise the robot on the path that it learned. This is VPR (visual place recognition): a neural network turns an image into a short vector, a descriptor, and the robot compares the current descriptor with the stored ones, to figure out where exactly it is. The current state of the art is MegaLoc (G. Berton and C. Masone, "MegaLoc: One Retrieval to Place Them All", CVPR Workshops, 2025), which reliably recognises places it has visited before. In principle it could be applied to panoramas. Place recognition on panoramas exists in some form, including revisits in opposite directions (P. Hansen and B. Browning, "Omnidirectional Visual Place Recognition using Rotation Invariant Sequence Matching", CMU Robotics Institute, 2015).
+
+An added benefit of a panoramic image is that it tells the robot which way it faces. The IMU (inertial measurement unit) provides the gravity direction, which turns the panorama upright: rows are elevation, columns are azimuth, and a yaw rotation is a cyclic shift of the columns (turning on the spot slides the picture sideways and wraps it around the edges). The shift that best aligns the current panorama with the taught one is the heading difference, and the 180° turn of the return trip is a shift by half the width. 
+
+Finding this rotation is a classical geometry problem. For example, Makadia and Daniilidis ("Rotation Recovery from Spherical Images without Correspondences", IEEE TPAMI 28(7), 2006) recover the full 3D rotation between two spherical images with a Fourier transform on the rotation group. 
+
+A neural network that respects the same rotation symmetry (SO(3), the group of all 3D rotations; T. S. Cohen et al., "Spherical CNNs", ICLR 2018) could refine this together with the IMU data, but the classical solution may already be enough. 
+
+Between keyframes the robot then navigates with the IMU and wheel encoders, and every match to a keyframe resets the drift, the position error that builds up between keyframes. At the time of writing this, however, there exists no published full-stack implementation of such a system on a robot, so its reliability is still unknown.
+
+The other system uses a lidar. The robot then navigates by the shape of its surroundings. 3D lidar-inertial odometry (estimating the robot's motion from lidar scans and an IMU) is mature open source. VT&R3 has a lidar pipeline too. 
+
+Although lidar can provide a 360° panorama of the surroundings, it can be inaccurate in geometrically featureless terrain. A 2026 paper reports a conventional lidar teach and repeat system failing on a flat airport field (K. M. Papais, W. Zhao and T. D. Barfoot, "Degeneracy-Resilient Teach and Repeat for Geometrically Challenging Environments Using FMCW Lidar", 2026). 
+
+Depending on the state of a construction site, featureless can be exactly what the robot sees: a bare concrete floor between four plain walls. 
+
+There is also the question of stairs. Stair navigation is usually not available out of the box for lidar systems. To incorporate them in navigation one must make sure they are not treated as an obstacle. Otherwise the robot might not even come close to stairs let alone climb them. 
+
+The camera system doesn't have the same problem, as it localises itself from images and doesn't treat stairs as an obstacle. Assuming the robot can climb the stairs, the IMU simply notes that the robot is tilted. 
+
+Some work treats stairs as a separate requirement: LITE (J. Chen et al., "LITE: A Learning-Integrated Topological Explorer for Multi-Floor Indoor Environments", IROS 2025) splits a building into a floor-stair topology, uses a segmentation model to find the stairs, and was tested on a quadruped robot. But once again no documented system exists where full autonomous teach and repeat was applied on environments with stairs.
+
+So which of the two stacks holds its position better as a construction site changes? At this stage of robotics it is unknown. Both have potential. Most likely lidar will have a documented solution sooner, given its higher accuracy, but as we humans don't really shoot lasers, the pure camera system might also get there in the end.
