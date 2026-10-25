@@ -1,5 +1,5 @@
 ---
-title: Real-Time Robot Tracking, Re-architected in Rust
+title: Halving a robot’s latency by rebuilding its software in Rust
 description: >-
   A vision-guided robot kept losing its target. The cause was a
   concurrency-model failure; the fix was a rearchitecture from Python to Rust.
@@ -10,7 +10,16 @@ summary: >-
   robot held its target where it had previously lost it, with end-to-end latency
   roughly halved.
 icon: bullseye
-order: 1
+order: 2
+problem:
+  area: Latency
+  symptom: It sees but reacts too late
+  excerpt: >-
+    A vision-guided robot kept losing the person it was meant to follow whenever
+    they moved too quickly. The problem was diagnosed as a concurrency-model
+    failure, and the system was rearchitected from Python to Rust, after which
+    the robot held its target where it had previously lost it, with end-to-end
+    latency roughly halved.
 ---
 
 A robotics startup was building a robot for construction sites. Picture a rectangular base on mecanum wheels with a box on top, watching the world through an Intel RealSense depth camera. Its job was to track and follow a moving person in real time across the cluttered and unpredictable environment of a live site. To do that reliably, it has to detect, track, and hold the person in frame continuously.

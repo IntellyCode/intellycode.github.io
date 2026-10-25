@@ -13,7 +13,7 @@ date: "2026-10-02"
 icon: rulers
 ---
 
-In my [case study on shear locking](/case-studies/shear-locking-fea), a finite element (FEM) simulation of a bent flat steel bar came out about 60% too stiff with linear bricks on a coarse mesh, and still about 10% off after refining it. Shear locking is an effect in simulations where the modelled rod resists bending more than a real rod does. The case study showed it experimentally, and here I want to show where it comes from mathematically.
+In my [case study on shear locking](/blog/shear-locking-fea), a finite element (FEM) simulation of a bent flat steel bar came out about 60% too stiff with linear bricks on a coarse mesh, and still about 10% off after refining it. Shear locking is an effect in simulations where the modelled rod resists bending more than a real rod does. The case study showed it experimentally, and here I want to show where it comes from mathematically.
 
 To simulate this deformation, we need to know what a simulation does inside each small piece of the rod. In the finite element method (FEM), the body is cut into small elements. Each element has a set of points called nodes, and the unknown displacement inside the element is replaced by a simple function fixed by its values at those nodes. The solver finds the nodal values.
 

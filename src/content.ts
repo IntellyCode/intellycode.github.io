@@ -8,6 +8,7 @@ export type Frontmatter = {
   minutes: number
   icon?: string
   order?: number
+  problem?: { area: string; symptom: string; excerpt: string }
 }
 
 export type Entry = {
@@ -32,6 +33,8 @@ export const caseStudies = collect(
   import.meta.glob<MdxModule>('./content/case-studies/*.mdx', { eager: true }),
   'case-studies',
 ).sort((a, b) => a.meta.order! - b.meta.order!)
+
+export const featuredCaseStudies = caseStudies.filter((entry) => entry.meta.problem)
 
 export const posts = collect(
   import.meta.glob<MdxModule>('./content/blog/*.mdx', { eager: true }),

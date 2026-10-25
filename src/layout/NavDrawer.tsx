@@ -29,7 +29,7 @@ export default function NavDrawer({ open, onClose }: Props) {
       </Offcanvas.Header>
       <Offcanvas.Body className="d-flex flex-column px-4 pb-4">
         <nav>
-          {[...navLinks, { label: 'Contact', href: '/#contact' }].map((link) => (
+          {navLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}

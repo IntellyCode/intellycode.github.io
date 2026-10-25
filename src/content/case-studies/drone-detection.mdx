@@ -1,5 +1,5 @@
 ---
-title: Detecting and Tracking Flying Objects
+title: Finding the drone that the state of the art missed
 description: >-
   A real-time system that detects drones, tells them apart from birds and
   planes, and forecasts where each is heading, beating the published state of
@@ -12,7 +12,17 @@ summary: >-
   same public benchmark. On one brutally hard clip the best published model
   missed the drone in all 300 frames; mine found it in 262.
 icon: airplane
-order: 2
+order: 1
+problem:
+  area: Perception
+  symptom: It can't find what matters
+  excerpt: >-
+    A startup needed to see drones in the sky reliably, tell them apart from the
+    birds and planes that fool most detectors, and know where each one was
+    heading. The system does all three, and beats the published state of the art
+    at drone detection on every object size, on the same public benchmark. On one
+    brutally hard clip the best published model missed the drone in all 300
+    frames; this one found it in 262.
 ---
 
 A startup working in the drone space needed to detect drones. They were still exploring where their technology goes, so the detector had to serve experiments they had not fully defined yet. Track a drone in flight. Spot one at a distance. Tell a drone apart from everything else in the sky. The one thing that was certain is that whatever they built next would need to trust what the camera was telling it, and a detector you cannot trust is worse than none at all.

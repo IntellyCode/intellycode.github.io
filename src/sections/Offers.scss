@@ -1,0 +1,36 @@
+@use '../styles/tokens' as t;
+
+.offer {
+  display: flex;
+  flex-direction: column;
+  padding: 1.75rem;
+  border: 1px solid transparent;
+  border-radius: .75rem;
+  background: t.$tint;
+}
+
+.offer-open {
+  background: transparent;
+  border: 1px dashed t.$line;
+}
+
+.offer-icon {
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  font-size: 1.1rem;
+  background: t.$white;
+
+  .offer-open & { background: t.$pale; }
+}
+
+.offer-symptom {
+  font-size: 1.4rem;
+  line-height: 1.25;
+  letter-spacing: -.01em;
+}
+
+.offer-footer {
+  padding-top: 1rem;
+  border-top: 1px solid t.$line;
+}

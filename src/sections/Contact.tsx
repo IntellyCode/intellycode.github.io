@@ -6,7 +6,7 @@ export default function Contact() {
       <div className="container py-md-5 reveal">
         <h2 className="section-title mb-3">Contact</h2>
         <p className="hero-tagline text-body-secondary mb-4" style={{ maxWidth: '34em' }}>
-          If there's something computational your team has wanted to try but hasn't had someone to get it working, let me know.
+          Describe what the robot does wrong and the hardware it runs on.
         </p>
         <div className="d-flex flex-wrap gap-2">
           <a href={`mailto:${site.email}`} className="btn btn-primary btn-lg">

@@ -29,7 +29,13 @@ export default function Header() {
             <i className="bi bi-envelope-fill me-2" />Email me
           </a>
         </nav>
-        <button type="button" className="btn ms-auto me-n2 d-lg-none" aria-label="Open menu" onClick={() => setOpen(true)}>
+        <button
+          type="button"
+          className="btn p-0 ms-auto me-n2 d-lg-none d-grid"
+          style={{ width: 44, height: 44, placeItems: 'center' }}
+          aria-label="Open menu"
+          onClick={() => setOpen(true)}
+        >
           <i className="bi bi-list fs-3" />
         </button>
       </div>

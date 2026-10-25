@@ -1,8 +1,8 @@
 import Seo from '../components/Seo'
 import Hero from '../sections/Hero'
 import CaseStudies from '../sections/CaseStudies'
+import Offers from '../sections/Offers'
 import Testimonials from '../sections/Testimonials'
-import Work from '../sections/Work'
 import Contact from '../sections/Contact'
 import { site } from '../site'
 
@@ -10,14 +10,13 @@ export default function Home() {
   return (
     <>
       <Seo
-        title={`${site.name} — ${site.role}`}
-        shareTitle={`${site.name} — ${site.role}`}
+        title={site.name}
+        shareTitle={site.name}
         description={site.description}
         schema={{
           '@context': 'https://schema.org',
           '@type': 'Person',
           name: site.name,
-          jobTitle: site.role,
           description: site.description,
           url: site.origin,
           image: site.avatar,
@@ -27,8 +26,8 @@ export default function Home() {
       />
       <Hero />
       <CaseStudies />
+      <Offers />
       <Testimonials />
-      <Work />
       <Contact />
     </>
   )

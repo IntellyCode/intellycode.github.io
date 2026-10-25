@@ -5,16 +5,12 @@ description: >-
   unsupervised is an engineering problem. How I built a reliable autonomous
   outreach agent.
 summary: >-
-  Getting an AI to generate things is easy. Getting one you can trust to act on
-  someone's behalf, unsupervised, is the hard part, and it is an engineering
-  problem more than a prompting one. I built such a system for personalized
-  cold outreach, where a single mistake lands in a stranger's inbox. By hand,
-  one can write maybe 50 personalized emails a day. The system can now run until
-  it hits the email provider's send limit, which is ten times higher than that,
-  at the same personalization and the same reply rate, with the operator out of
-  the loop.
+  Getting an AI to generate things is easy. Trusting one to act on someone's
+  behalf, unsupervised, is the hard part. The answer is clear guardrails: the AI
+  does only what it is good at, and code that cannot hallucinate checks its work
+  before anything reaches a stranger's inbox.
 icon: robot
-order: 3
+date: "2026-06-29"
 ---
 
 Most people use AI as a thing that hands work back to them. You ask it to write something, summarize something, or answer a question, and you are sitting right there to read what comes back and catch the mistakes before they matter. That is the easy half. The hard half is handing an AI a real task with real consequences and walking away, trusting it to run on its own with nobody reading every line before it leaves. That is the difference between a tool that drafts and an agent that acts, and the second one is where most people get it wrong.

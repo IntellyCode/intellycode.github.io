@@ -1,0 +1,46 @@
+---
+title: Why a VLM drives a robot into a wall
+description: >-
+  A vision-language model that tells a kitchen from a hallway still drove a
+  robot into a wall. The fix was to stop letting it steer: the robot remembers
+  where things are, and the model only names what it wants.
+summary: >-
+  Why does a vision-language model (VLM) that can tell a kitchen from a hallway
+  still drive a robot into a wall when asked to grab a coffee? It knows what it
+  wants but has no sense of where the walls are. The fix was to stop letting it
+  steer: the robot remembers where things are, and the model only names what it
+  wants.
+icon: signpost-split
+order: 3
+problem:
+  area: Autonomy
+  symptom: The model says go there, and the robot hits the wall
+  excerpt: >-
+    Why does a vision-language model (VLM) that can tell a kitchen from a
+    hallway still drive a robot into a wall when asked to grab a coffee? It
+    knows what it wants but has no sense of where the walls are. The fix was to
+    stop letting it steer: the robot remembers where things are, and the model
+    only names what it wants.
+---
+
+What happens when you tell a robot "grab me a coffee" and leave the rest to a language model? A robotics research lab wanted to give its robot exactly that kind of interface. A way to get that functionality is via an agentic harness. If you have used a coding agent you know the idea: a language model in a loop, looking at the state of the world, picking an action and seeing what happened. This one had the same loop, but the thing it controlled was a robot instead of a terminal.
+
+The first design looked reasonable on paper. Picture a floor plan with a dot where the robot stands. The VLM sees that map and the history of where the robot has been, and it explores the way you would in a new building. It drops a point on a place it wants to visit, the robot goes there, and the model reasons from what it finds. Is this a kitchen? Is there coffee here? If not, try the next room.
+
+It did not work. Although the model correctly located the corners of an image, it was unable to handle any slightly complex geometry. For example, the most common failure was a series of points placed on a straight line, with a wall somewhere along it.
+
+The good news is that no walls or robots were harmed in the process. The robot ran Nav2, the navigation stack of ROS, on top of SLAM, so the planner refused to drive through obstacles. The bad news is that no progress was being made. In practice the VLM still wanted to go through the wall, Nav2 kept refusing, and the whole system sat in a loop with the model asking for the same impossible point. It could not talk itself out of it. A robot that stands still asking for a wall is no more useful for fetching coffee than one that crashed into it.
+
+Now to be fair to the models. The latest frontier models would most likely do much better here, the field moves fast, but that was not tested. This robot works with offline data on a small local GPU. A model of roughly 30 billion parameters was about the ceiling, so the choice was whatever open source offered at that size.
+
+But why am I telling you all this? The main point of this study is a design principle: a language model carries no guarantee that its geometry is right, so nothing should be built on it being right. We can let it reason, try and attempt things, but we should guarantee that the model does not take any destructive action.
+
+Hence the model must stay away from the motors and from the control layer entirely, and something in the middle has to turn what the model wants into movement. How to build that middle layer is still an open research area. One workable middle layer is a memory.
+
+Think about how you know where the coffee cup is in your own flat. You do not compute it. You walked past it, and you remember. The robot does the same. During normal navigation it explores, and SLAM already has frontier exploration built in, so no VLM is needed for that. While it explores, the robot takes snapshots and stores each one with the coordinates where it was. When it comes back to a place, it updates what it sees, like you noticing: wait a second, the cup is gone!
+
+Now the VLM gets a task, say, "grab me a coffee". Through the harness it outputs one thing: find a cup of coffee. That request goes into the memory, which returns every place a coffee cup or anything related to coffee was spotted, with exact coordinates, and the robot navigates to those coordinates one by one until the task has been achieved or no coffee has been found, at which point we can move to the debugging step of why the model did not recognise the coffee machine.
+
+Here is the final system in action, with the model decoupled and the memory as the middle layer: [watch the video](https://youtu.be/OvEv-jboP04).
+
+If you are deciding where a language model belongs in a robot, the answer is that it decides what and never where or how. Geometry, safety and motion belong to layers you can test one by one. The model supplies intent, and when a better model arrives next year it drops into the same slot without touching anything that moves the robot.

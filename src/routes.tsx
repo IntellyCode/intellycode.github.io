@@ -3,7 +3,8 @@ import Layout from './layout/Layout'
 import Home from './pages/Home'
 import Article from './pages/Article'
 import BlogIndex from './pages/BlogIndex'
-import { caseStudies, posts } from './content'
+import Redirect from './pages/Redirect'
+import { caseStudies, featuredCaseStudies, posts } from './content'
 
 export const routes: RouteRecord[] = [
   {
@@ -14,11 +15,15 @@ export const routes: RouteRecord[] = [
       { path: 'blog', element: <BlogIndex /> },
       ...caseStudies.map((entry) => ({
         path: `case-studies/${entry.slug}`,
-        element: <Article entry={entry} series={caseStudies} />,
+        element: <Article entry={entry} series={featuredCaseStudies} />,
       })),
       ...posts.map((entry) => ({
         path: `blog/${entry.slug}`,
         element: <Article entry={entry} series={posts} />,
+      })),
+      ...['shear-locking-fea', 'ai-delegation-outreach'].map((slug) => ({
+        path: `case-studies/${slug}`,
+        element: <Redirect to={`/blog/${slug}`} />,
       })),
     ],
   },

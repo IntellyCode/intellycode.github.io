@@ -1,0 +1,31 @@
+@use '../styles/tokens' as t;
+
+.case-row {
+  border-radius: .75rem;
+  transition: background .25s ease;
+
+  + .case-row { box-shadow: 0 -1px 0 t.$line; }
+  .arrow { transition: transform .25s; }
+  &:hover { background: t.$tint; }
+  &:hover .case-icon { background: t.$green; color: t.$white !important; }
+  &:hover .arrow { transform: translateX(4px); }
+}
+
+.case-icon {
+  width: 46px;
+  height: 46px;
+  place-items: center;
+  font-size: 1.15rem;
+  background: t.$pale;
+  transition: background .25s ease, color .25s ease;
+}
+
+.case-class {
+  font-size: 1.5rem;
+  line-height: 1.15;
+}
+
+.case-title {
+  font-weight: 500;
+  line-height: 1.4;
+}

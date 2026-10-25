@@ -5,14 +5,11 @@ description: >-
   percent by accident: two unrelated errors happen to cancel out. Redesigning
   the geometry shows the same element type can be 60% off.
 summary: >-
-  A finite-element model of a steel shaft, built with straight-edged elements,
-  predicts the bend of the part to within about five percent of the exact
-  answer. That agreement turns out to be an accident: two unrelated errors
-  happen to cancel each other out. Redesigning the geometry makes it obvious
-  that using straight-edged elements for a bending problem can lead to a
-  prediction that is, in the worst case, 60% off.
+  A finite-element model of a bending steel shaft lands within five percent of
+  the exact answer, but only because two unrelated errors cancel out. Change the
+  geometry and the same elements come out 60% off.
 icon: gear-wide-connected
-order: 4
+date: "2026-09-16"
 ---
 
 Picture a robotics company building an arm meant to lift around fifty kilograms at the end of its reach. Somewhere in that arm is a steel shaft, maybe a wheel axle, maybe the pivot the whole arm turns on, and before anyone cuts metal someone has to answer a plain question: how far will this bend under load, and will it survive at all? Building a physical prototype to find out is slow and expensive. Building a finite-element model of the same shaft on a computer is neither. It lets you push and overload the part as many times as you like before a single piece of metal is machined, which is the whole appeal of the method. So let's build such a model.
