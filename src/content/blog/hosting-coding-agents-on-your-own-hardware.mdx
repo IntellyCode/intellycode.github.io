@@ -1,0 +1,102 @@
+---
+title: Hosting Coding Agents On Your Own Hardware
+description: >-
+  Self-hosting coding agents: Qwen3.8-27B on an RTX PRO 6000, DeepSeek
+  V4.1-Flash on eight H200s or Mac Studios, users per machine, prefix caching,
+  cost per million tokens against Claude Opus 5.5, and air-gapped operation.
+summary: >-
+  A local LLM keeps a team's code and data on hardware it owns. The post
+  compares Claude Opus 5.5 with the best open models, DeepSeek V4.1-Flash and
+  Qwen3.8-27B, and works through the hardware each needs, from one RTX PRO 6000
+  to eight H200s or Mac Studios, how many developers one machine serves, the
+  cost per token, and what running it takes. The key takeaway is that if the
+  number of developers multiplied by $150 to $250 per month exceeds the
+  machine's monthly cost, it might make sense to go local.
+date: "2026-11-05"
+---
+
+Machine learning on the edge usually means hardware for robots and embedded devices. But when you deploy a multi-billion-parameter language model, even an NVIDIA GPU is the edge. This post is about how to host coding agents and LLMs on local hardware, when that makes economic sense, and why a company would want to.
+
+I assume you all know what an AI agent is. One of the key benefits of integrating AI agents into your workflow is that a language model in that loop can inform the design of neural networks and actuators, run tests that you don't have time to do, and collect data that would take ages. It directly raises the speed at which a team tries new ideas.
+
+For most companies using an LLM of the frontier labs is the norm. In exchange for the data you send them you get very strong reasoning capability. Usually that is perfectly acceptable.
+
+The issue arises for data-sensitive companies. A defence contractor, a hospital or a bank can't send its code or records to someone else's servers. Depending on an outside company is a second problem, because you can't be sure how stable that relationship will stay. For these teams, a local LLM that only they control is particularly appealing. So how do you get a local LLM running, what does it cost, and how much intelligence will you lose against the frontier labs?
+
+One key prerequisite is that your data is secure. If your data leaves the building, someone else's controls protect it. So the most secure setup is GPUs you own, on your own network, with no route to the internet, which is called an air gap. 
+
+Hosting an agent comes down to four pieces of technology: the model, the hardware it runs on (an Nvidia GPU server or a Mac), the serving software on top (vLLM, SGLang or oMLX), and the network and tools that connect your developers to it (a VPN, Open WebUI, LiteLLM and the coding agents themselves). Step-by-step installation guides exist for each of them, so here I name them and answer the questions that decide whether you should adopt them: which models get you close to the closed labs, what the hardware costs, when owning beats paying per token, what maintenance involves, and why one machine can only serve so many people at once.
+
+Start with the models. I picked one closed reference, Claude Opus 5.5, which I personally use and which sits in the top three on the metrics that matter most here: the Intelligence Index, Terminal-Bench 4.0 and FrontierCode 2.0. The Artificial Analysis Intelligence Index averages four equal parts: knowledge work, coding, science, and general knowledge with hard exam questions. Terminal-Bench 4.0 and FrontierCode 2.0 are its coding parts, and they tell you whether an agent can work through real tasks over many steps without losing the thread, which is what an agent is for.
+
+The other two models are the two best on these same metrics that are open source, coming in two weight categories: small and large. The table below summarises those scores. 
+
+Technically one could use Kimi K3.1 Pro instead of DeepSeek, but that is much larger than DeepSeek and requires even more expensive hardware than what is mentioned in this post, so I left it out of the comparison. 
+
+| Model                             | Intelligence index | Terminal-Bench 4.0 | FrontierCode 2.0 | Context window (tokens) | \$ per million output tokens |
+| --------------------------------- | ------------------ | ------------------ | ---------------- | ----------------------- | --------------------------- |
+| Claude Opus 5.5 (closed)          | 59                 | 60%                | 46%              | 1M                      | 20 (plus 4 for input)       |
+| DeepSeek V4.1-Flash (large, open) | 33                 | 34%                | 28%              | 1M                      | 6 to 8.30\*                 |
+| Qwen3.8-27B (small, open)         | 20                 | 6%                 | 15%              | 256k                    | about 1.60\*                |
+
+\* Owned Nvidia hardware: the purchase price spread over three years plus electricity around the clock, with tokens counted at normal usage of eight workday hours. The calculation follows below.
+
+The index puts the open models 26 and 39 points behind Opus. Hallucination is only a small part of the index, and more than half of its weight sits on multi-step agentic tasks, so the gap says mostly that the open models are weaker at long, multi-step work and hard reasoning.
+
+The two coding benchmarks are the closest to daily work. FrontierCode gives the model 132 real tasks from open-source repositories and asks whether a maintainer would merge the result, with credit for getting parts right, although a failed blocking check scores zero. Terminal-Bench gives 66 terminal tasks and counts one as solved only when every test passes. That is probably why Qwen keeps a third of Opus's score on FrontierCode (15% against 46%) but only a tenth on Terminal-Bench (6% against 60%): partial credit helps a weak model on the first and does almost nothing on the second. So don't expect to run multi-hour loops with the small model, although AI-assisted work with it is still viable.
+
+Although the statistics present a good picture, the best test is to try several models out and see which one fits your workflow best.
+
+Precision decides which hardware you need. At 16 bits per weight, the original, the small model takes 56 GB. At 8 bits it takes about 31 GB, a bit more than half, and at 4 bits about 17 to 21 GB. The rounding costs a little quality. To get a general picture: Llama models at 8-bit keep 99.75% of the original benchmark score on average and lose about a tenth of a point on coding, while at 4-bit they keep about 99.4% and lose about one point. 
+
+The statistics show what is theoretically achievable, but without the relevant hardware you can't run them. The RTX PRO 6000 has 96 GB of video memory (VRAM), enough for the weights and the conversation history of several users, when using the Qwen model, and it costs about \$19,500 in Germany today, up from about \$12,000 earlier this year. 
+
+You could go cheaper, by getting an RTX 5090 for example, which has only 32 GB of VRAM, but at that point you are really squeezing maximum performance out of it. Full meaning of the word on the edge! This in principle is a good starting point as it allows you to see if a local model even at reduced performance is of any value. 
+
+DeepSeek, with 552 billion parameters, needs far more video memory than that, because its official weights take 510 GB: the main model, stored as a mix of 4-bit and 8-bit weights, plus extra lookup tables. Data centre cards solve this. An H200 carries 141 GB of the fastest kind of video memory (HBM3e) with eight on one board. Eight H200s come as one complete server: the eight GPUs on their linked board, two processors, 2,000 GB of system RAM, storage, networking and power supplies, for \$320,000 to \$470,000, and the GPUs are most of that price, since the board alone is quoted at about \$310,000. 
+
+NVIDIA tested the eight-card configuration by running DeepSeek V4.1-Flash with 64 requests at once, each carrying a 64,000-token prompt, and measured the speed each user got and the wait before the first word. So \$320,000 is the entry price for the benchmarked numbers below.
+
+You could also take the Apple route. A Mac Studio gives the GPU and the processor one shared pool of memory, so a single machine can hold a model that otherwise needs several GPUs, for \$22,299. With oMLX, the serving software most people use on Apple silicon, one Mac can in principle run DeepSeek, but only as a community build rounded to 4 bits or fewer, about 290 to 340 GB, because the official 510 GB would leave almost no room for conversations. That costs some quality. For these builds the only measurement is how far their output drifts from the official model, and no coding score has been published.
+
+So how many people can one machine serve? Two limits answer that: memory and speed. Memory comes first. The weights take a fixed amount, and every user adds a cache of their conversation (the KV cache): while the model generates, it keeps a stored summary of every earlier token so that it doesn't recompute them, and a plain model keeps all of it in video memory. For Qwen that cache is about 9 GB per user at 256k tokens in 8-bit, and the RTX PRO 6000 has about 55 GB left after the weights, so it holds six full-length sessions, or many more shorter ones.
+
+DeepSeek compresses its cache by design, storing about 890 bytes per token, so one user at 256k tokens of context costs about a quarter of a gigabyte, about forty times less than Qwen's. The eight NVIDIA cards leave about 500 GB after the weights and a tenth reserved for working space, so memory holds roughly 2,000 sessions at 256k, and speed, not memory, is their limit. On a Mac the 4-bit build leaves about 170 to 220 GB, hundreds of sessions at that compression. At the full 1M context a user costs about 0.93 GB, so the eight cards hold roughly 540 sessions and a Mac 180 to 240.
+
+Speed comes from the two kinds of tokens, which behave differently. Input tokens are the prompt. The model reads all of them at once in one parallel pass, which is heavy on arithmetic and called prefill. Output tokens are the answer. The model produces them one at a time, and each one needs the card to read the part of the model that is active for that token from memory again, which is heavy on memory bandwidth and called decode.
+
+Batching helps with decode. The serving engine takes the next token of several users and processes them together, so the weights are read once and applied to all of them. Total output rises while each person's speed falls, which is why one user gets 44 tokens per second on the RTX PRO 6000 and sixteen users get 34 each. A long prompt already keeps the arithmetic units busy, so the engine splits it into chunks and slots them between other users' decode steps, and requests join and leave the batch at every step instead of waiting for a full one (continuous batching). Simultaneous requests can strain both ends: a heavy prompt delays the first word for everyone, and a crowd of answers slows every speed.
+
+So the server limits how many requests it runs at once and keeps the rest in a queue. The engine (vLLM, SGLang or oMLX) holds waiting requests in a first-come-first-served line until memory for another conversation frees up, and if memory fills mid-way it pauses a request and recomputes it later. A gateway such as LiteLLM caps each developer's requests per minute, and a request above the cap is turned away and retried. 
+
+Waiting for the first word matters as much as speed afterwards, because an agent task is dozens of requests in a row. An agent also resends the whole conversation with every call, so a fresh 64,000-token prompt means a full prefill. NVIDIA's numbers show the cost: with 64 long requests in flight on the eight-H200 server, in the mode that dedicates four cards to prefill and four to decode, the typical request got its first word in under a fifth of a second, but one in ten waited about 35 seconds. In the mode that mixes both jobs on the same cards, that tail was a few seconds, at lower throughput per card. Prefill is heavy arithmetic, so a long prompt is slow even with an empty queue.
+
+The remedy is a prefix cache, which is the KV cache kept between requests, so the server remembers the conversation it already processed and only works on the new part. It matters most for long agent sessions and little for one-shot questions. The cache lives in layers. The fastest copy sits in GPU memory, where users who share a system prompt and tool definitions can share one copy. When that fills, it spills into the server's RAM and then onto SSD, each layer larger and slower. SGLang and NVIDIA Dynamo do this on Nvidia hardware and oMLX does it on a Mac. SGLang reports 56% to 84% lower first-word time on cache hits.
+
+So given all this how many people can one machine serve in practice? Requests are not developers. Anthropic's rate-limit recommendation for teams of 20 to 50 works out to 1.25 to 1.75 requests a minute per user, and if each request lasts half a minute (my assumption), a developer keeps 0.6 to 0.9 requests active. NVIDIA measured 64 simultaneous requests at about 51 tokens per second each, so the eight-H200 machine covers 70 to 100 developers. The RTX PRO 6000 handled 16 simultaneous requests, which covers 18 to 27 developers on short prompts.
+
+Now the Macs, the option for a team with no server room. Community runs of DeepSeek on an M3 Ultra with 512 GB, using oMLX with speculative decoding, measure 53 to 67 tokens per second for one user and about 525 tokens per second of prefill at prompts of 4k to 32k tokens. Apple no longer sells that 512 GB M3 Ultra, so these numbers are a reference point, and the newest M5 Ultra is expected to do better. It has 1.5 times the memory bandwidth (1.2 against 0.82 TB/s), which points to about 80 to 100 tokens per second for one user. Apple claims four times faster prompt processing, which points to about 2,100 tokens per second of prefill, helped by the neural accelerators in its GPU. Using the earlier rate-limit recommendations it is expected that one 512 GB M5 Ultra at \$22,299 runs one copy of DeepSeek and serves 8 to 12 requests, which covers 9 to 20 developers.
+
+Eight Macs, each with its own copy of the model behind a load balancer (a front desk that sends each request to a free machine), serve 64 to 96 requests for \$178,000, which covers 70 to 160 developers. oMLX reports 3.4 to 4.1 times the aggregate throughput at eight simultaneous requests on other large models. Applied to the M5 Ultra's expected 90 tokens per second for one user, that is about 2,400 to 2,900 tokens per second across the eight Macs, close to the H200 machine's 2,900 at 38 to 56 percent of its price. But at this stage nobody has published a multi-user run of this build.
+
+The Macs' weak spot is prefill, and it limits how far they scale. A cold 64,000-token prompt takes about 125 seconds on the M3 Ultra and about 30 seconds on the M5 Ultra, if Apple's claim of four times faster prompt processing holds. oMLX's prefix cache, which keeps hot blocks in RAM and the rest on the SSD, is built for exactly this agent traffic, so most turns only process the new tokens.
+
+Pretty much a Mac has the lower entry price, but the H200 machine still wins wherever long prompts and speed matter. It needs a rack though, the standard metal cabinet that servers mount in, and an electrician to install circuits that carry 10.2 kilowatts, where the Macs run from office sockets that deliver under 4. So an integrator has to install the H200 machine in your building.
+
+Now the cost per token, on normal usage: the hardware spread over three years, electricity at about \$0.23 per kilowatt-hour with the machine powered around the clock, and a team that works it eight hours on workdays. The H200 machine costs \$11,000 to \$15,000 a month and produces about 1.8 billion tokens in that time at 2,900 tokens per second, which is \$6 to \$8.30 per million output tokens. The eight Macs cost about \$5,500 a month and produce 1.5 to 1.8 billion tokens, which is \$3 to \$3.60. The RTX PRO 6000 costs about \$540 a month for the card alone at today's price, and 542 tokens per second on short prompts gives 0.34 billion tokens a month, about \$1.60 per million before the workstation around it. Opus charges \$20 per million output tokens. Agents send far more input than they get back, and a hosted API charges for that input as well, \$4 per million for Opus, where your own machine's monthly cost already covers it.
+
+So when does owning pay for itself? Anthropic reports an average of \$150 to \$250 per developer per month for Claude Code. At that rate the H200 machine breaks even at 45 to 100 developers, which is where it fills up, and the eight Macs at 22 to 37. Above about 100 developers you need a second H200 machine. The RTX PRO 6000 breaks even at two to four. Below those numbers owning costs more than the hosted price, so the data is the reason to buy. 
+
+Owning also buys less capability per request: Opus scores 59 on the index and DeepSeek 33. With the hardware, run DeepSeek. Without eight H200s or a 512 GB Mac, one RTX PRO 6000 runs Qwen for shorter tasks, but its 6% on Terminal-Bench still leaves room for improvement. Qwen stops at 256k of context, and small models tend to lose the thread over long tasks anyway.
+
+Someone has to run this machine, and a hospital IT team usually has no one who has. Eight GPUs don't plug into a computer. They come mounted on one board inside a purpose-built server with its own processors, 2,000 GB of system memory, fast storage and networking. It draws up to 10.2 kilowatts through six power supplies on 200 to 240 volt circuits, and it needs a room held between 5 and 30 °C as well as the rack and the electrician. Without a hardware team, you buy it from an integrator who delivers, installs and supports it. The build itself is project work: installing the drivers, choosing a serving engine such as vLLM or SGLang, picking the quantisation (the rounding to fewer bits), benchmarking and tuning.
+
+After the build, one H200 card failing stops the whole instance (this does not apply to eight Mac Studios, though), because one model is split across all eight, and loading 510 GB at restart takes minutes. A hardware support contract covers replacements. Driver and CUDA versions stay pinned to what the serving engine supports. A new serving release arrives every few weeks, a better model appears every few months, and monitoring watches temperature, memory errors and queue length. Most of the effort falls in the first months, during the build.
+
+For users, Open WebUI gives chat, and a gateway, LiteLLM, in front of the model gives every developer their own key with a budget, which starts to matter once a team has more than a handful of users. The coding agents your developers already know, such as Claude Code, OpenCode or Cline, speak the same interface. Keep the model server on the internal network only, because exposure is how these setups get breached: one security study found 1,139 exposed Ollama servers on the public internet, and 214 of them were answering requests.
+
+Remote staff are the one trade-off against the air gap. A mesh VPN, a private network that links each laptop to the office, lets them in: WireGuard directly or Tailscale through its coordination server. Every remote login passes through the VPN, so a flaw there opens the air gap. Logs stay inside: keep who asked and when, and keep prompt text off or short-lived.
+
+So to summarise. If you want to choose between closed and open source, count your developers and multiply by \$150 to \$250. If the total comes close to the machine's monthly cost, and your team fits inside what it serves, the machine pays for itself. If the question though is about data security, then there isn't really a choice to be made, so I hope the above guide made it clear how to set this all up.
+
+Even though open models trail the frontier today, it is expected that they will keep improving, so a new release of similar size runs on the same machine, while giving better reasoning performance. 
